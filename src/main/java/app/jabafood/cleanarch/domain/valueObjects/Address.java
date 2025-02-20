@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.core.domain.valueobjects;
+package app.jabafood.cleanarch.domain.valueObjects;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

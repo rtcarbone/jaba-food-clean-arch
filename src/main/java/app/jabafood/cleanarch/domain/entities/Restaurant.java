@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.core.domain.entities;
+package app.jabafood.cleanarch.domain.entities;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +19,16 @@ public class Restaurant {
     final String openingHours;
     final User owner;
 
-    public Restaurant(UUID id, @NonNull String name, @NonNull String cuisineType,
+    public Restaurant(@NonNull String name, @NonNull String cuisineType,
+                      @NonNull String openingHours, @NonNull User owner) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.cuisineType = cuisineType;
+        this.openingHours = openingHours;
+        this.owner = owner;
+    }
+
+    public Restaurant(@NonNull UUID id, @NonNull String name, @NonNull String cuisineType,
                       @NonNull String openingHours, @NonNull User owner) {
         this.id = id;
         this.name = name;

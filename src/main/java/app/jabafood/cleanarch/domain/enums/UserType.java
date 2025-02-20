@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.core.domain.enums;
+package app.jabafood.cleanarch.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

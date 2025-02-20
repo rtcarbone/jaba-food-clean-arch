@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.core.domain.entities;
+package app.jabafood.cleanarch.domain.entities;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,7 +22,20 @@ public class MenuItem {
     final String imagePath;
     final Restaurant restaurant;
 
-    public MenuItem(UUID id, @NonNull String name, @NonNull String description, @NonNull BigDecimal price,
+    public MenuItem(@NonNull String name, @NonNull String description, @NonNull BigDecimal price,
+                    boolean inRestaurantOnly, @NonNull String imagePath, @NonNull Restaurant restaurant) {
+        if (price.compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("Price must be positive");
+
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.inRestaurantOnly = inRestaurantOnly;
+        this.imagePath = imagePath;
+        this.restaurant = restaurant;
+    }
+
+    public MenuItem(@NonNull UUID id, @NonNull String name, @NonNull String description, @NonNull BigDecimal price,
                     boolean inRestaurantOnly, @NonNull String imagePath, @NonNull Restaurant restaurant) {
         if (price.compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("Price must be positive");
 
