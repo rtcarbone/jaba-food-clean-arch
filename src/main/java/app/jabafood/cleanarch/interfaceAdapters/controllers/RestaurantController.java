@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurants")
+@RequestMapping("api/v1/restaurants")
 public class RestaurantController {
     private final CreateRestaurantUseCase createRestaurantUseCase;
     private final GetRestaurantByIdUseCase getRestaurantByIdUseCase;

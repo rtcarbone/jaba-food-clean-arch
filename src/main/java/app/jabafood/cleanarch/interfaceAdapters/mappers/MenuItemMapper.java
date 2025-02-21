@@ -3,12 +3,10 @@ package app.jabafood.cleanarch.interfaceAdapters.mappers;
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemDTO;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class MenuItemMapper {
 
     public MenuItemDTO toDTO(MenuItem menuItem) {

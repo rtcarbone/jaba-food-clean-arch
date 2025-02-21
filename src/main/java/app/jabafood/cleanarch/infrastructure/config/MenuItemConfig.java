@@ -2,11 +2,17 @@ package app.jabafood.cleanarch.infrastructure.config;
 
 import app.jabafood.cleanarch.application.useCases.menuItem.*;
 import app.jabafood.cleanarch.domain.repositories.MenuItemRepository;
+import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MenuItemConfig {
+
+    @Bean
+    public MenuItemMapper menuItemMapper() {
+        return new MenuItemMapper();
+    }
 
     @Bean
     public CreateMenuItemUseCase createMenuItemUseCase(MenuItemRepository menuItemRepository) {

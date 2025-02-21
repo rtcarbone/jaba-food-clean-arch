@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/menu-items")
+@RequestMapping("api/v1/menu-items")
 public class MenuItemController {
 
     private final CreateMenuItemUseCase createMenuItemUseCase;

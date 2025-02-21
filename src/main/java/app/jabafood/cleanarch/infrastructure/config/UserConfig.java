@@ -2,11 +2,17 @@ package app.jabafood.cleanarch.infrastructure.config;
 
 import app.jabafood.cleanarch.application.useCases.user.*;
 import app.jabafood.cleanarch.domain.repositories.UserRepository;
+import app.jabafood.cleanarch.interfaceAdapters.mappers.UserMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class UserConfig {
+
+    @Bean
+    public UserMapper userMapper() {
+        return new UserMapper();
+    }
 
     @Bean
     public CreateUserUseCase createUserUseCase(UserRepository userRepository) {

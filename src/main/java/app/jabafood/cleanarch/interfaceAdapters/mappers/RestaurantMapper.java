@@ -2,12 +2,10 @@ package app.jabafood.cleanarch.interfaceAdapters.mappers;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantDTO;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class RestaurantMapper {
 
     private final UserMapper userMapper;

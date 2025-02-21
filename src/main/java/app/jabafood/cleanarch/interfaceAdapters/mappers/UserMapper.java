@@ -2,12 +2,10 @@ package app.jabafood.cleanarch.interfaceAdapters.mappers;
 
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.interfaceAdapters.dto.UserDTO;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class UserMapper {
 
     public UserDTO toDTO(User user) {
