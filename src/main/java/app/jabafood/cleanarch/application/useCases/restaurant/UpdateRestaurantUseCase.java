@@ -16,12 +16,10 @@ public class UpdateRestaurantUseCase {
         Restaurant existingRestaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
-        Restaurant updatedRestaurant = new Restaurant(
-                existingRestaurant.getId(),
+        Restaurant updatedRestaurant = existingRestaurant.copyWith(
                 updatedData.getName(),
                 updatedData.getCuisineType(),
-                updatedData.getOpeningHours(),
-                existingRestaurant.getOwner()
+                updatedData.getOpeningHours()
         );
 
         return restaurantRepository.save(updatedRestaurant);

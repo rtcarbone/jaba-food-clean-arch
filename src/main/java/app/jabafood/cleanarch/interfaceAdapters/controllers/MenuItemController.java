@@ -37,7 +37,7 @@ public class MenuItemController {
 
     @PostMapping
     public ResponseEntity<MenuItemDTO> create(@Valid @RequestBody MenuItemDTO menuItemDTO) {
-        var menuItem = menuItemMapper.toEntity(menuItemDTO);
+        var menuItem = menuItemMapper.toDomain(menuItemDTO);
         var createdMenuItem = createMenuItemUseCase.execute(menuItem);
         return ResponseEntity.ok(menuItemMapper.toDTO(createdMenuItem));
     }
@@ -55,7 +55,7 @@ public class MenuItemController {
 
     @PutMapping("/{id}")
     public ResponseEntity<MenuItemDTO> update(@PathVariable UUID id, @Valid @RequestBody MenuItemDTO menuItemDTO) {
-        var menuItem = menuItemMapper.toEntity(menuItemDTO);
+        var menuItem = menuItemMapper.toDomain(menuItemDTO);
         var updatedMenuItem = updateMenuItemUseCase.execute(id, menuItem);
         return ResponseEntity.ok(menuItemMapper.toDTO(updatedMenuItem));
     }

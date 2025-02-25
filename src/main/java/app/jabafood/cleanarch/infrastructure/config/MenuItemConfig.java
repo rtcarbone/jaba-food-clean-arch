@@ -10,11 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class MenuItemConfig {
 
     @Bean
-    public MenuItemMapper menuItemMapper() {
-        return new MenuItemMapper();
-    }
-
-    @Bean
     public CreateMenuItemUseCase createMenuItemUseCase(MenuItemRepository menuItemRepository) {
         return new CreateMenuItemUseCase(menuItemRepository);
     }

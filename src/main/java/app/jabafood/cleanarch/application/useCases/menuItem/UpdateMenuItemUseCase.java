@@ -23,7 +23,7 @@ public class UpdateMenuItemUseCase {
                 updatedData.getPrice() != null ? updatedData.getPrice() : existingItem.getPrice(),
                 updatedData.isInRestaurantOnly(),
                 updatedData.getImagePath() != null ? updatedData.getImagePath() : existingItem.getImagePath(),
-                existingItem.getRestaurant()
+                existingItem.getRestaurantId()
         );
 
         return menuItemRepository.save(updatedItem);

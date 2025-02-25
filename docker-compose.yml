@@ -9,7 +9,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: jaba_app
-    restart: always
     ports:
       - "8080:8080"
     depends_on:
@@ -29,7 +28,6 @@ services:
   postgres:
     image: postgres:16
     container_name: jaba_db
-    restart: always
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -49,7 +47,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: jaba_pgadmin
-    restart: always
     ports:
       - "5050:80"
     environment:

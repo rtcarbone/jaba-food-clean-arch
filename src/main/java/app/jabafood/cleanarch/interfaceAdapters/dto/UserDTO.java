@@ -1,7 +1,6 @@
 package app.jabafood.cleanarch.interfaceAdapters.dto;
 
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.valueObjects.Address;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +23,6 @@ public record UserDTO(
         @NotNull(message = "User type is required")
         UserType userType,
 
-        Address address
+        AddressDTO address
 ) {
 }

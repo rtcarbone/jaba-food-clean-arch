@@ -35,7 +35,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
-        var user = userMapper.toEntity(userDTO);
+        var user = userMapper.toDomain(userDTO);
         var createdUser = createUserUseCase.execute(user);
         return ResponseEntity.ok(userMapper.toDTO(createdUser));
     }
@@ -53,7 +53,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
-        var user = userMapper.toEntity(userDTO);
+        var user = userMapper.toDomain(userDTO);
         var updatedUser = updateUserUseCase.execute(id, user);
         return ResponseEntity.ok(userMapper.toDTO(updatedUser));
     }

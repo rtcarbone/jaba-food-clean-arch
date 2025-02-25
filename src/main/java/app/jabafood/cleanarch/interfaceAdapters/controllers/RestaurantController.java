@@ -35,7 +35,7 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<RestaurantDTO> create(@RequestBody RestaurantDTO restaurantDTO) {
-        var restaurant = restaurantMapper.toEntity(restaurantDTO);
+        var restaurant = restaurantMapper.toDomain(restaurantDTO);
         var createdRestaurant = createRestaurantUseCase.execute(restaurant);
         return ResponseEntity.ok(restaurantMapper.toDTO(createdRestaurant));
     }
@@ -53,7 +53,7 @@ public class RestaurantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RestaurantDTO> update(@PathVariable UUID id, @RequestBody RestaurantDTO restaurantDTO) {
-        var restaurant = restaurantMapper.toEntity(restaurantDTO);
+        var restaurant = restaurantMapper.toDomain(restaurantDTO);
         var updatedRestaurant = updateRestaurantUseCase.execute(id, restaurant);
         return ResponseEntity.ok(restaurantMapper.toDTO(updatedRestaurant));
     }

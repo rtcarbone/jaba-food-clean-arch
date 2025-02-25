@@ -14,6 +14,7 @@ public class ListMenuItemsByRestaurantUseCase {
     }
 
     public List<MenuItem> execute(UUID restaurantId) {
+        // Business logic goes here
         return menuItemRepository.findByRestaurantId(restaurantId);
     }
 }

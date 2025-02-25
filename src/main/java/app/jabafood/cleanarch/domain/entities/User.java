@@ -1,67 +1,43 @@
 package app.jabafood.cleanarch.domain.entities;
 
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.valueObjects.Address;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
 @EqualsAndHashCode
-@FieldDefaults(level = PRIVATE)
+@FieldDefaults(level = PRIVATE, makeFinal = true)
+@AllArgsConstructor
 public class User {
-
-    final UUID id;
-    final String name;
-    final String username;
-    final UserType userType;
-    final Address address;
+    UUID id;
+    String name;
     String email;
+    String username;
     String password;
-    LocalDateTime lastUpdate;
+    UserType userType;
+    LocalDateTime createdAt;
+    Address address;
+    List<UUID> restaurants;
 
-    public User(@NonNull String name, @NonNull String email, @NonNull String username,
-                @NonNull String password, @NonNull UserType userType, @NonNull Address address) {
-
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.userType = userType;
-        this.address = address;
-        this.lastUpdate = LocalDateTime.now();
+    public User copyWith(String name, String email, String password, Address address) {
+        return new User(
+                this.id,
+                name != null ? name : this.name,
+                email != null ? email : this.email,
+                this.username,
+                password != null ? password : this.password,
+                this.userType,
+                LocalDateTime.now(),
+                address != null ? address : this.address,
+                this.restaurants
+        );
     }
-
-    public User(@NonNull UUID id, @NonNull String name, @NonNull String email, @NonNull String username,
-                @NonNull String password, @NonNull UserType userType, @NonNull Address address) {
-
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.userType = userType;
-        this.address = address;
-        this.lastUpdate = LocalDateTime.now();
-    }
-
-    public void updatePassword(@NonNull String newPassword) {
-        // TODO VALIDACOES AO TROCAR SENHA
-        this.password = newPassword;
-        this.lastUpdate = LocalDateTime.now();
-    }
-
-    public void updateEmail(@NonNull String newEmail) {
-        // TODO VALIDACOES AO TROCAR EMAIL
-        this.email = newEmail;
-        this.lastUpdate = LocalDateTime.now();
-    }
-
 }

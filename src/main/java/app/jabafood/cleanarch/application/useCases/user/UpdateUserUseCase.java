@@ -16,14 +16,11 @@ public class UpdateUserUseCase {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        User updatedUser = new User(
-                existingUser.getId(),
-                updatedData.getName() != null ? updatedData.getName() : existingUser.getName(),
-                updatedData.getEmail() != null ? updatedData.getEmail() : existingUser.getEmail(),
-                existingUser.getUsername(),
-                updatedData.getPassword() != null ? updatedData.getPassword() : existingUser.getPassword(),
-                existingUser.getUserType(),
-                updatedData.getAddress() != null ? updatedData.getAddress() : existingUser.getAddress()
+        User updatedUser = existingUser.copyWith(
+                updatedData.getName(),
+                updatedData.getEmail(),
+                updatedData.getPassword(),
+                updatedData.getAddress()
         );
 
         return userRepository.save(updatedUser);

@@ -1,39 +1,35 @@
 package app.jabafood.cleanarch.domain.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
 @EqualsAndHashCode
-@FieldDefaults(level = PRIVATE)
+@FieldDefaults(level = PRIVATE, makeFinal = true)
+@AllArgsConstructor
 public class Restaurant {
-    final UUID id;
-    final String name;
-    final String cuisineType;
-    final String openingHours;
-    final User owner;
+    UUID id;
+    String name;
+    String cuisineType;
+    String openingHours;
+    UUID ownerId;
+    List<UUID> menuItems;
 
-    public Restaurant(@NonNull String name, @NonNull String cuisineType,
-                      @NonNull String openingHours, @NonNull User owner) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.cuisineType = cuisineType;
-        this.openingHours = openingHours;
-        this.owner = owner;
-    }
-
-    public Restaurant(@NonNull UUID id, @NonNull String name, @NonNull String cuisineType,
-                      @NonNull String openingHours, @NonNull User owner) {
-        this.id = id;
-        this.name = name;
-        this.cuisineType = cuisineType;
-        this.openingHours = openingHours;
-        this.owner = owner;
+    public Restaurant copyWith(String name, String cuisineType, String openingHours) {
+        return new Restaurant(
+                this.id,
+                name != null ? name : this.name,
+                cuisineType != null ? cuisineType : this.cuisineType,
+                openingHours != null ? openingHours : this.openingHours,
+                this.ownerId,
+                this.menuItems
+        );
     }
 }
