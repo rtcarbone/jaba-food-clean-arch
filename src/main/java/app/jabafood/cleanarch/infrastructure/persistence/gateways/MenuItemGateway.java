@@ -4,20 +4,19 @@ import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.MenuItemEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.MenuItemJpaRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Repository
+@Component
 public class MenuItemGateway implements IMenuItemGateway {
     private final MenuItemJpaRepository jpaRepository;
     private final MenuItemEntityMapper mapper;
 
-    public MenuItemGateway(MenuItemJpaRepository jpaRepository, @Qualifier("menuItemEntityMapper") MenuItemEntityMapper mapper) {
+    public MenuItemGateway(MenuItemJpaRepository jpaRepository, MenuItemEntityMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }

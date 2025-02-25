@@ -4,20 +4,19 @@ import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.UserEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Repository
+@Component
 public class UserGateway implements IUserGateway {
     private final UserJpaRepository jpaRepository;
     private final UserEntityMapper mapper;
 
-    public UserGateway(UserJpaRepository jpaRepository, @Qualifier("userEntityMapper") UserEntityMapper mapper) {
+    public UserGateway(UserJpaRepository jpaRepository, UserEntityMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }
