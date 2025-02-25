@@ -1,21 +1,21 @@
 package app.jabafood.cleanarch.application.useCases.menuItem;
 
-import app.jabafood.cleanarch.domain.repositories.MenuItemRepository;
+import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 
 import java.util.UUID;
 
 public class DeleteMenuItemUseCase {
-    private final MenuItemRepository menuItemRepository;
+    private final IMenuItemGateway menuItemGateway;
 
-    public DeleteMenuItemUseCase(MenuItemRepository menuItemRepository) {
-        this.menuItemRepository = menuItemRepository;
+    public DeleteMenuItemUseCase(IMenuItemGateway menuItemGateway) {
+        this.menuItemGateway = menuItemGateway;
     }
 
     public void execute(UUID id) {
-        if (!menuItemRepository.findById(id)
-                .isPresent()) {
+        if (menuItemGateway.findById(id)
+                .isEmpty()) {
             throw new RuntimeException("Menu item not found");
         }
-        menuItemRepository.delete(id);
+        menuItemGateway.delete(id);
     }
 }

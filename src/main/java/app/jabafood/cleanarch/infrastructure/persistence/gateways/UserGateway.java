@@ -1,7 +1,7 @@
-package app.jabafood.cleanarch.infrastructure.persistence.repositories.impl;
+package app.jabafood.cleanarch.infrastructure.persistence.gateways;
 
 import app.jabafood.cleanarch.domain.entities.User;
-import app.jabafood.cleanarch.domain.repositories.UserRepository;
+import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.UserEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,11 +13,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserGateway implements IUserGateway {
     private final UserJpaRepository jpaRepository;
     private final UserEntityMapper mapper;
 
-    public UserRepositoryImpl(UserJpaRepository jpaRepository, @Qualifier("userEntityMapper") UserEntityMapper mapper) {
+    public UserGateway(UserJpaRepository jpaRepository, @Qualifier("userEntityMapper") UserEntityMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }

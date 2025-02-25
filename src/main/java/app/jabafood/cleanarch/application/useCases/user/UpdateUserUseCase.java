@@ -1,19 +1,19 @@
 package app.jabafood.cleanarch.application.useCases.user;
 
 import app.jabafood.cleanarch.domain.entities.User;
-import app.jabafood.cleanarch.domain.repositories.UserRepository;
+import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 
 import java.util.UUID;
 
 public class UpdateUserUseCase {
-    private final UserRepository userRepository;
+    private final IUserGateway userGateway;
 
-    public UpdateUserUseCase(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UpdateUserUseCase(IUserGateway userGateway) {
+        this.userGateway = userGateway;
     }
 
     public User execute(UUID id, User updatedData) {
-        User existingUser = userRepository.findById(id)
+        User existingUser = userGateway.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         User updatedUser = existingUser.copyWith(
@@ -23,6 +23,6 @@ public class UpdateUserUseCase {
                 updatedData.getAddress()
         );
 
-        return userRepository.save(updatedUser);
+        return userGateway.save(updatedUser);
     }
 }

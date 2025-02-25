@@ -1,7 +1,7 @@
-package app.jabafood.cleanarch.infrastructure.persistence.repositories.impl;
+package app.jabafood.cleanarch.infrastructure.persistence.gateways;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
-import app.jabafood.cleanarch.domain.repositories.RestaurantRepository;
+import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.RestaurantEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,11 +13,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class RestaurantRepositoryImpl implements RestaurantRepository {
+public class RestaurantGateway implements IRestaurantGateway {
     private final RestaurantJpaRepository jpaRepository;
     private final RestaurantEntityMapper mapper;
 
-    public RestaurantRepositoryImpl(RestaurantJpaRepository jpaRepository, @Qualifier("restaurantEntityMapper") RestaurantEntityMapper mapper) {
+    public RestaurantGateway(RestaurantJpaRepository jpaRepository, @Qualifier("restaurantEntityMapper") RestaurantEntityMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }

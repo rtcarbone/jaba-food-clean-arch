@@ -1,7 +1,7 @@
-package app.jabafood.cleanarch.infrastructure.persistence.repositories.impl;
+package app.jabafood.cleanarch.infrastructure.persistence.gateways;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
-import app.jabafood.cleanarch.domain.repositories.MenuItemRepository;
+import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.MenuItemEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.MenuItemJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,11 +13,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class MenuItemRepositoryImpl implements MenuItemRepository {
+public class MenuItemGateway implements IMenuItemGateway {
     private final MenuItemJpaRepository jpaRepository;
     private final MenuItemEntityMapper mapper;
 
-    public MenuItemRepositoryImpl(MenuItemJpaRepository jpaRepository, @Qualifier("menuItemEntityMapper") MenuItemEntityMapper mapper) {
+    public MenuItemGateway(MenuItemJpaRepository jpaRepository, @Qualifier("menuItemEntityMapper") MenuItemEntityMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }

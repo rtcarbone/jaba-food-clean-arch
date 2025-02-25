@@ -1,17 +1,17 @@
 package app.jabafood.cleanarch.application.useCases.user;
 
-import app.jabafood.cleanarch.domain.repositories.UserRepository;
+import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 
 import java.util.UUID;
 
 public class DeleteUserUseCase {
-    private final UserRepository userRepository;
+    private final IUserGateway userGateway;
 
-    public DeleteUserUseCase(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public DeleteUserUseCase(IUserGateway userGateway) {
+        this.userGateway = userGateway;
     }
 
     public void execute(UUID id) {
-        userRepository.delete(id);
+        userGateway.delete(id);
     }
 }

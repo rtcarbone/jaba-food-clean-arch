@@ -1,13 +1,12 @@
-package app.jabafood.cleanarch.domain.repositories;
+package app.jabafood.cleanarch.domain.gateways;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
-import app.jabafood.cleanarch.domain.entities.User;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RestaurantRepository {
+public interface IRestaurantGateway {
     Restaurant save(Restaurant restaurant);
 
     Optional<Restaurant> findById(UUID id);

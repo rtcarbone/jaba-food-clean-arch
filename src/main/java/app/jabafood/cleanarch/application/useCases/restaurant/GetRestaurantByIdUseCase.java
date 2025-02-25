@@ -1,19 +1,19 @@
 package app.jabafood.cleanarch.application.useCases.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
-import app.jabafood.cleanarch.domain.repositories.RestaurantRepository;
+import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 
 import java.util.UUID;
 
 public class GetRestaurantByIdUseCase {
-    private final RestaurantRepository restaurantRepository;
+    private final IRestaurantGateway restaurantGateway;
 
-    public GetRestaurantByIdUseCase(RestaurantRepository restaurantRepository) {
-        this.restaurantRepository = restaurantRepository;
+    public GetRestaurantByIdUseCase(IRestaurantGateway restaurantGateway) {
+        this.restaurantGateway = restaurantGateway;
     }
 
     public Restaurant execute(UUID id) {
-        return restaurantRepository.findById(id)
+        return restaurantGateway.findById(id)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
     }
 }

@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.domain.repositories;
+package app.jabafood.cleanarch.domain.gateways;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MenuItemRepository {
+public interface IMenuItemGateway {
     MenuItem save(MenuItem menuItem);
 
     Optional<MenuItem> findById(UUID id);

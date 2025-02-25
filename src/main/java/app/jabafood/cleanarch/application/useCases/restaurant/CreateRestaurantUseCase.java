@@ -1,16 +1,16 @@
 package app.jabafood.cleanarch.application.useCases.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
-import app.jabafood.cleanarch.domain.repositories.RestaurantRepository;
+import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 
 public class CreateRestaurantUseCase {
-    private final RestaurantRepository restaurantRepository;
+    private final IRestaurantGateway restaurantGateway;
 
-    public CreateRestaurantUseCase(RestaurantRepository restaurantRepository) {
-        this.restaurantRepository = restaurantRepository;
+    public CreateRestaurantUseCase(IRestaurantGateway restaurantGateway) {
+        this.restaurantGateway = restaurantGateway;
     }
 
     public Restaurant execute(Restaurant restaurant) {
-        return restaurantRepository.save(restaurant);
+        return restaurantGateway.save(restaurant);
     }
 }

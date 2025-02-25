@@ -1,16 +1,16 @@
 package app.jabafood.cleanarch.application.useCases.user;
 
 import app.jabafood.cleanarch.domain.entities.User;
-import app.jabafood.cleanarch.domain.repositories.UserRepository;
+import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 
 public class CreateUserUseCase {
-    private final UserRepository userRepository;
+    private final IUserGateway userGateway;
 
-    public CreateUserUseCase(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CreateUserUseCase(IUserGateway userGateway) {
+        this.userGateway = userGateway;
     }
 
     public User execute(User user) {
-        return userRepository.save(user);
+        return userGateway.save(user);
     }
 }

@@ -1,19 +1,19 @@
 package app.jabafood.cleanarch.application.useCases.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
-import app.jabafood.cleanarch.domain.repositories.MenuItemRepository;
+import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 
 import java.util.UUID;
 
 public class UpdateMenuItemUseCase {
-    private final MenuItemRepository menuItemRepository;
+    private final IMenuItemGateway menuItemGateway;
 
-    public UpdateMenuItemUseCase(MenuItemRepository menuItemRepository) {
-        this.menuItemRepository = menuItemRepository;
+    public UpdateMenuItemUseCase(IMenuItemGateway menuItemGateway) {
+        this.menuItemGateway = menuItemGateway;
     }
 
     public MenuItem execute(UUID id, MenuItem updatedData) {
-        MenuItem existingItem = menuItemRepository.findById(id)
+        MenuItem existingItem = menuItemGateway.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menu item not found"));
 
         MenuItem updatedItem = new MenuItem(
@@ -26,6 +26,6 @@ public class UpdateMenuItemUseCase {
                 existingItem.getRestaurantId()
         );
 
-        return menuItemRepository.save(updatedItem);
+        return menuItemGateway.save(updatedItem);
     }
 }

@@ -1,16 +1,16 @@
 package app.jabafood.cleanarch.application.useCases.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
-import app.jabafood.cleanarch.domain.repositories.MenuItemRepository;
+import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 
 public class CreateMenuItemUseCase {
-    private final MenuItemRepository menuItemRepository;
+    private final IMenuItemGateway menuItemGateway;
 
-    public CreateMenuItemUseCase(MenuItemRepository menuItemRepository) {
-        this.menuItemRepository = menuItemRepository;
+    public CreateMenuItemUseCase(IMenuItemGateway menuItemGateway) {
+        this.menuItemGateway = menuItemGateway;
     }
 
     public MenuItem execute(MenuItem menuItem) {
-        return menuItemRepository.save(menuItem);
+        return menuItemGateway.save(menuItem);
     }
 }
