@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.application.useCases.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
+import app.jabafood.cleanarch.domain.exceptions.RestaurantNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 
 import java.util.UUID;
@@ -14,12 +15,13 @@ public class UpdateRestaurantUseCase {
 
     public Restaurant execute(UUID id, Restaurant updatedData) {
         Restaurant existingRestaurant = restaurantGateway.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                .orElseThrow(() -> new RestaurantNotFoundException(id));
 
         Restaurant updatedRestaurant = existingRestaurant.copyWith(
                 updatedData.getName(),
                 updatedData.getCuisineType(),
-                updatedData.getOpeningHours()
+                updatedData.getOpeningTime(),
+                updatedData.getClosingTime()
         );
 
         return restaurantGateway.save(updatedRestaurant);

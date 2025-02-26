@@ -1,11 +1,14 @@
 package app.jabafood.cleanarch.infrastructure.persistence.entities;
 
+import app.jabafood.cleanarch.domain.enums.CuisineType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,9 +25,15 @@ public class RestaurantEntity {
 
     private String name;
 
-    private String cuisineType;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private CuisineType cuisineType;
 
-    private String openingHours;
+    @Column(nullable = false)
+    private LocalTime openingTime;
+
+    @Column(nullable = false)
+    private LocalTime closingTime;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
@@ -32,4 +41,7 @@ public class RestaurantEntity {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuItemEntity> menuItems;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

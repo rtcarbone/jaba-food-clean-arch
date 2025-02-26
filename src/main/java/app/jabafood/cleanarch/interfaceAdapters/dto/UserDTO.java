@@ -33,4 +33,7 @@ public record UserDTO(
         @Schema(description = "Address of the user")
         AddressDTO address
 ) implements Serializable {
+    public static UserDTO fromId(UUID id) {
+        return new UserDTO(id, null, null, null, null, null, null);
+    }
 }
