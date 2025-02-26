@@ -16,6 +16,9 @@ public record RestaurantDTO(
         @Size(max = 255, message = "Restaurant name must be at most 255 characters")
         String name,
 
+        @NotNull(message = "Address cannot be null")
+        AddressDTO address,
+
         @NotNull(message = "Cuisine type cannot be null")
         CuisineType cuisineType,
 

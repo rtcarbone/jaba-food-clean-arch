@@ -19,17 +19,19 @@ import static lombok.AccessLevel.PRIVATE;
 public class Restaurant {
     UUID id;
     String name;
+    Address address;
     CuisineType cuisineType;
     LocalTime openingTime;
     LocalTime closingTime;
     UUID ownerId;
     List<UUID> menuItems;
 
-    public Restaurant(UUID id, String name, CuisineType cuisineType,
+    public Restaurant(UUID id, String name, Address address, CuisineType cuisineType,
                       LocalTime openingTime, LocalTime closingTime, UUID ownerId, List<UUID> menuItems) {
-        validate(name, cuisineType, openingTime, closingTime, ownerId);
+        validate(name, address, cuisineType, openingTime, closingTime, ownerId);
         this.id = id;
         this.name = name;
+        this.address = address;
         this.cuisineType = cuisineType;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
@@ -37,12 +39,13 @@ public class Restaurant {
         this.menuItems = menuItems;
     }
 
-    public Restaurant copyWith(String name, CuisineType cuisineType,
+    public Restaurant copyWith(String name, Address address, CuisineType cuisineType,
                                LocalTime openingTime, LocalTime closingTime) {
-        validate(name, cuisineType, openingTime, closingTime, this.ownerId);
+        validate(name, address, cuisineType, openingTime, closingTime, this.ownerId);
         return new Restaurant(
                 this.id,
                 name,
+                address != null ? address : this.address,
                 cuisineType != null ? cuisineType : this.cuisineType,
                 openingTime != null ? openingTime : this.openingTime,
                 closingTime != null ? closingTime : this.closingTime,
@@ -51,11 +54,14 @@ public class Restaurant {
         );
     }
 
-    private void validate(String name, CuisineType cuisineType,
+    private void validate(String name, Address address, CuisineType cuisineType,
                           LocalTime openingTime, LocalTime closingTime, UUID ownerId) {
         if (name == null || name.trim()
                 .isEmpty()) {
             throw new RestaurantMandatoryFieldException("name");
+        }
+        if (address == null) {
+            throw new RestaurantMandatoryFieldException("address");
         }
         if (cuisineType == null) {
             throw new RestaurantMandatoryFieldException("cuisineType");

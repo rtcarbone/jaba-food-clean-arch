@@ -25,6 +25,10 @@ public class RestaurantEntity {
 
     private String name;
 
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    private AddressEntity address;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private CuisineType cuisineType;

@@ -19,6 +19,7 @@ public class UpdateRestaurantUseCase {
 
         Restaurant updatedRestaurant = existingRestaurant.copyWith(
                 updatedData.getName(),
+                updatedData.getAddress(),
                 updatedData.getCuisineType(),
                 updatedData.getOpeningTime(),
                 updatedData.getClosingTime()
