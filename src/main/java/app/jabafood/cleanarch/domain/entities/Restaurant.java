@@ -28,7 +28,6 @@ public class Restaurant {
 
     public Restaurant(UUID id, String name, Address address, CuisineType cuisineType,
                       LocalTime openingTime, LocalTime closingTime, UUID ownerId, List<UUID> menuItems) {
-        validate(name, address, cuisineType, openingTime, closingTime, ownerId);
         this.id = id;
         this.name = name;
         this.address = address;
@@ -41,7 +40,6 @@ public class Restaurant {
 
     public Restaurant copyWith(String name, Address address, CuisineType cuisineType,
                                LocalTime openingTime, LocalTime closingTime) {
-        validate(name, address, cuisineType, openingTime, closingTime, this.ownerId);
         return new Restaurant(
                 this.id,
                 name,
@@ -54,8 +52,7 @@ public class Restaurant {
         );
     }
 
-    private void validate(String name, Address address, CuisineType cuisineType,
-                          LocalTime openingTime, LocalTime closingTime, UUID ownerId) {
+    public void validate() {
         if (name == null || name.trim()
                 .isEmpty()) {
             throw new RestaurantMandatoryFieldException("name");

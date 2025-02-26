@@ -25,6 +25,8 @@ public class UpdateRestaurantUseCase {
                 updatedData.getClosingTime()
         );
 
+        updatedRestaurant.validate();
+
         return restaurantGateway.save(updatedRestaurant);
     }
 }

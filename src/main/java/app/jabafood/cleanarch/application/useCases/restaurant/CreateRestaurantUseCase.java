@@ -21,6 +21,8 @@ public class CreateRestaurantUseCase {
             throw new RestaurantOwnerInvalidException(restaurant.getOwnerId());
         }
 
+        restaurant.validate();
+
         return restaurantGateway.save(restaurant);
     }
 }
