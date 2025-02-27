@@ -3,7 +3,11 @@ package app.jabafood.cleanarch.interfaceAdapters.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
 public record AddressDTO(
+        UUID id,
+
         @NotBlank(message = "Street cannot be blank")
         @Size(max = 255, message = "Street name is too long")
         String street,
