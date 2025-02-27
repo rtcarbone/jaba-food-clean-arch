@@ -9,6 +9,7 @@ CREATE TABLE restaurants
     address_id   UUID         NOT NULL,
     created_at   TIMESTAMP        DEFAULT NOW(),
     FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (address_id) REFERENCES addresses (id) ON DELETE CASCADE,
     CHECK (opening_time < closing_time) -- Garante que a abertura é antes do fechamento
 );
 
