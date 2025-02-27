@@ -10,7 +10,7 @@ import org.springframework.lang.NonNull;
 import java.io.Serializable;
 import java.util.UUID;
 
-public record UserDTO(
+public record UserRequestDTO(
         UUID id,
 
         @NotBlank(message = "Name cannot be empty")

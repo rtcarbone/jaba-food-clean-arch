@@ -1,7 +1,8 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers;
 
 import app.jabafood.cleanarch.application.useCases.restaurant.*;
-import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantRequestDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.RestaurantMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,26 +35,26 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<RestaurantDTO> create(@RequestBody RestaurantDTO restaurantDTO) {
-        var restaurant = restaurantMapper.toDomain(restaurantDTO);
+    public ResponseEntity<RestaurantResponseDTO> create(@RequestBody RestaurantRequestDTO restaurantRequestDTO) {
+        var restaurant = restaurantMapper.toDomain(restaurantRequestDTO);
         var createdRestaurant = createRestaurantUseCase.execute(restaurant);
         return ResponseEntity.ok(restaurantMapper.toDTO(createdRestaurant));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<RestaurantResponseDTO> findById(@PathVariable UUID id) {
         var restaurant = getRestaurantByIdUseCase.execute(id);
         return ResponseEntity.ok(restaurantMapper.toDTO(restaurant));
     }
 
     @GetMapping
-    public ResponseEntity<List<RestaurantDTO>> listAll() {
+    public ResponseEntity<List<RestaurantResponseDTO>> listAll() {
         return ResponseEntity.ok(restaurantMapper.toDTOList(listRestaurantsUseCase.execute()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> update(@PathVariable UUID id, @RequestBody RestaurantDTO restaurantDTO) {
-        var restaurant = restaurantMapper.toDomain(restaurantDTO);
+    public ResponseEntity<RestaurantResponseDTO> update(@PathVariable UUID id, @RequestBody RestaurantRequestDTO restaurantRequestDTO) {
+        var restaurant = restaurantMapper.toDomain(restaurantRequestDTO);
         var updatedRestaurant = updateRestaurantUseCase.execute(id, restaurant);
         return ResponseEntity.ok(restaurantMapper.toDTO(updatedRestaurant));
     }

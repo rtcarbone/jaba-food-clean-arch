@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record MenuItemDTO(
+public record MenuItemRequestDTO(
         UUID id,
 
         @NotBlank(message = "Item name cannot be empty")

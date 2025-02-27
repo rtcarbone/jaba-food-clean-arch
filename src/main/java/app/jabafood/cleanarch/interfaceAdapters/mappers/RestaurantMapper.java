@@ -1,16 +1,17 @@
 package app.jabafood.cleanarch.interfaceAdapters.mappers;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
-import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantRequestDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantResponseDTO;
 import org.mapstruct.Mapper;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface RestaurantMapper {
-    RestaurantDTO toDTO(Restaurant restaurant);
+    RestaurantResponseDTO toDTO(Restaurant restaurant);
 
-    Restaurant toDomain(RestaurantDTO dto);
+    Restaurant toDomain(RestaurantRequestDTO dto);
 
-    List<RestaurantDTO> toDTOList(List<Restaurant> restaurants);
+    List<RestaurantResponseDTO> toDTOList(List<Restaurant> restaurants);
 }

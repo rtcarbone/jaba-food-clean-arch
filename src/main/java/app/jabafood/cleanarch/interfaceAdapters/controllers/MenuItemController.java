@@ -1,7 +1,7 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers;
 
 import app.jabafood.cleanarch.application.useCases.menuItem.*;
-import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -36,26 +36,26 @@ public class MenuItemController {
     }
 
     @PostMapping
-    public ResponseEntity<MenuItemDTO> create(@Valid @RequestBody MenuItemDTO menuItemDTO) {
-        var menuItem = menuItemMapper.toDomain(menuItemDTO);
+    public ResponseEntity<MenuItemRequestDTO> create(@Valid @RequestBody MenuItemRequestDTO menuItemRequestDTO) {
+        var menuItem = menuItemMapper.toDomain(menuItemRequestDTO);
         var createdMenuItem = createMenuItemUseCase.execute(menuItem);
         return ResponseEntity.ok(menuItemMapper.toDTO(createdMenuItem));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MenuItemDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<MenuItemRequestDTO> findById(@PathVariable UUID id) {
         var menuItem = getMenuItemByIdUseCase.execute(id);
         return ResponseEntity.ok(menuItemMapper.toDTO(menuItem));
     }
 
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<MenuItemDTO>> findByRestaurant(@PathVariable UUID restaurantId) {
+    public ResponseEntity<List<MenuItemRequestDTO>> findByRestaurant(@PathVariable UUID restaurantId) {
         return ResponseEntity.ok(menuItemMapper.toDTOList(listMenuItemsByRestaurantUseCase.execute(restaurantId)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItemDTO> update(@PathVariable UUID id, @Valid @RequestBody MenuItemDTO menuItemDTO) {
-        var menuItem = menuItemMapper.toDomain(menuItemDTO);
+    public ResponseEntity<MenuItemRequestDTO> update(@PathVariable UUID id, @Valid @RequestBody MenuItemRequestDTO menuItemRequestDTO) {
+        var menuItem = menuItemMapper.toDomain(menuItemRequestDTO);
         var updatedMenuItem = updateMenuItemUseCase.execute(id, menuItem);
         return ResponseEntity.ok(menuItemMapper.toDTO(updatedMenuItem));
     }

@@ -1,10 +1,13 @@
 package app.jabafood.cleanarch.application.useCases.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
+import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantMandatoryFieldException;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantOwnerInvalidException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+
+import java.util.Optional;
 
 public class CreateRestaurantUseCase {
     private final IRestaurantGateway restaurantGateway;
@@ -17,19 +20,29 @@ public class CreateRestaurantUseCase {
 
     public Restaurant execute(Restaurant restaurant) {
 
-        if (restaurant.getOwner() == null) {
+        if (restaurant.getOwner() == null || restaurant.getOwner()
+                                                     .getId() == null) {
             throw new RestaurantMandatoryFieldException("owner");
         }
 
-        if (userGateway.findById(restaurant.getOwner()
-                                         .getId())
-                .isEmpty()) {
+        Optional<User> existingOwner = userGateway.findById(restaurant.getOwner()
+                                                                    .getId());
+        if (existingOwner.isEmpty()) {
             throw new RestaurantOwnerInvalidException(restaurant.getOwner()
                                                               .getId());
         }
 
-        restaurant.validate();
+        Restaurant newRestaurant = restaurant.copyWith(
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getCuisineType(),
+                restaurant.getOpeningTime(),
+                restaurant.getClosingTime(),
+                existingOwner.get()
+        );
 
-        return restaurantGateway.save(restaurant);
+        newRestaurant.validate();
+
+        return restaurantGateway.save(newRestaurant);
     }
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.UUID;
 
-public record RestaurantDTO(
+public record RestaurantRequestDTO(
         UUID id,
 
         @NotBlank(message = "Restaurant name cannot be blank")
@@ -29,6 +29,6 @@ public record RestaurantDTO(
         LocalTime closingTime,
 
         @NotNull(message = "Owner cannot be null")
-        UserDTO owner
+        UserRequestDTO owner
 ) implements Serializable {
 }

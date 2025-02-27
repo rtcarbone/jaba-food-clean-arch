@@ -1,7 +1,7 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers;
 
 import app.jabafood.cleanarch.application.useCases.user.*;
-import app.jabafood.cleanarch.interfaceAdapters.dto.UserDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.UserRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.UserMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,26 +34,26 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
-        var user = userMapper.toDomain(userDTO);
+    public ResponseEntity<UserRequestDTO> create(@RequestBody UserRequestDTO userRequestDTO) {
+        var user = userMapper.toDomain(userRequestDTO);
         var createdUser = createUserUseCase.execute(user);
         return ResponseEntity.ok(userMapper.toDTO(createdUser));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<UserRequestDTO> findById(@PathVariable UUID id) {
         var user = getUserByIdUseCase.execute(id);
         return ResponseEntity.ok(userMapper.toDTO(user));
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> listAll() {
+    public ResponseEntity<List<UserRequestDTO>> listAll() {
         return ResponseEntity.ok(userMapper.toDTOList(listUsersUseCase.execute()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
-        var user = userMapper.toDomain(userDTO);
+    public ResponseEntity<UserRequestDTO> update(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
+        var user = userMapper.toDomain(userRequestDTO);
         var updatedUser = updateUserUseCase.execute(id, user);
         return ResponseEntity.ok(userMapper.toDTO(updatedUser));
     }

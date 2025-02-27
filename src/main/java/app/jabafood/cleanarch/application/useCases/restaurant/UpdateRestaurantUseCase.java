@@ -22,7 +22,8 @@ public class UpdateRestaurantUseCase {
                 updatedData.getAddress(),
                 updatedData.getCuisineType(),
                 updatedData.getOpeningTime(),
-                updatedData.getClosingTime()
+                updatedData.getClosingTime(),
+                null
         );
 
         updatedRestaurant.validate();

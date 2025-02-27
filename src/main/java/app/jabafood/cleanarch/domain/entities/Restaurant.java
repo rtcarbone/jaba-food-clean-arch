@@ -39,7 +39,7 @@ public class Restaurant {
     }
 
     public Restaurant copyWith(String name, Address address, CuisineType cuisineType,
-                               LocalTime openingTime, LocalTime closingTime) {
+                               LocalTime openingTime, LocalTime closingTime, User owner) {
         return new Restaurant(
                 this.id,
                 name,
@@ -47,7 +47,7 @@ public class Restaurant {
                 cuisineType != null ? cuisineType : this.cuisineType,
                 openingTime != null ? openingTime : this.openingTime,
                 closingTime != null ? closingTime : this.closingTime,
-                this.owner,
+                owner != null ? owner : this.owner,
                 this.menuItems
         );
     }
