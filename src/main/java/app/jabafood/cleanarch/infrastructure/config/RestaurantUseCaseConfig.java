@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RestaurantConfig {
+public class RestaurantUseCaseConfig {
 
     @Bean
     public CreateRestaurantUseCase createRestaurantUseCase(IRestaurantGateway restaurantGateway, IUserGateway userGateway) {

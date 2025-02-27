@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MenuItemConfig {
+public class MenuItemUseCaseConfig {
 
     @Bean
     public CreateMenuItemUseCase createMenuItemUseCase(IMenuItemGateway menuItemGateway) {
