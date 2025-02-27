@@ -23,18 +23,18 @@ public class Restaurant {
     CuisineType cuisineType;
     LocalTime openingTime;
     LocalTime closingTime;
-    UUID ownerId;
-    List<UUID> menuItems;
+    User owner;
+    List<MenuItem> menuItems;
 
     public Restaurant(UUID id, String name, Address address, CuisineType cuisineType,
-                      LocalTime openingTime, LocalTime closingTime, UUID ownerId, List<UUID> menuItems) {
+                      LocalTime openingTime, LocalTime closingTime, User owner, List<MenuItem> menuItems) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.cuisineType = cuisineType;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.menuItems = menuItems;
     }
 
@@ -47,7 +47,7 @@ public class Restaurant {
                 cuisineType != null ? cuisineType : this.cuisineType,
                 openingTime != null ? openingTime : this.openingTime,
                 closingTime != null ? closingTime : this.closingTime,
-                this.ownerId,
+                this.owner,
                 this.menuItems
         );
     }
@@ -59,6 +59,8 @@ public class Restaurant {
         }
         if (address == null) {
             throw new RestaurantMandatoryFieldException("address");
+        } else {
+            address.validate();
         }
         if (cuisineType == null) {
             throw new RestaurantMandatoryFieldException("cuisineType");
@@ -72,7 +74,7 @@ public class Restaurant {
         if (openingTime.isAfter(closingTime) || openingTime.equals(closingTime)) {
             throw new InvalidClosingTimeException();
         }
-        if (ownerId == null) {
+        if (owner == null) {
             throw new RestaurantMandatoryFieldException("owner");
         }
     }

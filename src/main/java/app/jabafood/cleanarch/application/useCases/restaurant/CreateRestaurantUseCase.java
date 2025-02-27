@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.application.useCases.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
+import app.jabafood.cleanarch.domain.exceptions.RestaurantMandatoryFieldException;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantOwnerInvalidException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
@@ -16,9 +17,15 @@ public class CreateRestaurantUseCase {
 
     public Restaurant execute(Restaurant restaurant) {
 
-        if (userGateway.findById(restaurant.getOwnerId())
+        if (restaurant.getOwner() == null) {
+            throw new RestaurantMandatoryFieldException("owner");
+        }
+
+        if (userGateway.findById(restaurant.getOwner()
+                                         .getId())
                 .isEmpty()) {
-            throw new RestaurantOwnerInvalidException(restaurant.getOwnerId());
+            throw new RestaurantOwnerInvalidException(restaurant.getOwner()
+                                                              .getId());
         }
 
         restaurant.validate();

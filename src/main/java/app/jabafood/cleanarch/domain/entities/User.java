@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -25,7 +24,6 @@ public class User {
     UserType userType;
     LocalDateTime createdAt;
     Address address;
-    List<UUID> restaurants;
 
     public User copyWith(String name, String email, String password, Address address) {
         return new User(
@@ -36,8 +34,7 @@ public class User {
                 password != null ? password : this.password,
                 this.userType,
                 LocalDateTime.now(),
-                address != null ? address : this.address,
-                this.restaurants
+                address != null ? address : this.address
         );
     }
 }

@@ -3,6 +3,7 @@ package app.jabafood.cleanarch.interfaceAdapters.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 public record AddressDTO(
@@ -27,5 +28,5 @@ public record AddressDTO(
         @NotBlank(message = "Country cannot be blank")
         @Size(max = 100, message = "Country name is too long")
         String country
-) {
+) implements Serializable {
 }
