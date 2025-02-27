@@ -6,7 +6,6 @@ import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
-    UserEntityMapper INSTANCE = Mappers.getMapper(UserEntityMapper.class);
 
     @Named("mapRestaurantsToIds")
     static List<UUID> mapRestaurantsToIds(List<RestaurantEntity> entities) {

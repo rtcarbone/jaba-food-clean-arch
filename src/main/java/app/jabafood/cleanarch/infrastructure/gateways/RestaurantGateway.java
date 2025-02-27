@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.infrastructure.persistence.gateways;
+package app.jabafood.cleanarch.infrastructure.gateways;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
