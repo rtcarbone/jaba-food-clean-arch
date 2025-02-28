@@ -26,4 +26,5 @@ public class ListRestaurantsController {
     public ResponseEntity<List<RestaurantResponseDTO>> list() {
         return ResponseEntity.ok(restaurantMapper.toDTOList(listRestaurantsUseCase.execute()));
     }
+
 }

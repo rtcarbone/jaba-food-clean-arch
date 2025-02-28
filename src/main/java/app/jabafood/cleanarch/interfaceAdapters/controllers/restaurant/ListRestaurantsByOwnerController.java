@@ -28,4 +28,5 @@ public class ListRestaurantsByOwnerController {
     public ResponseEntity<List<RestaurantResponseDTO>> findByOwner(@PathVariable UUID ownerId) {
         return ResponseEntity.ok(restaurantMapper.toDTOList(listRestaurantsByOwnerUseCase.execute(ownerId)));
     }
+
 }
