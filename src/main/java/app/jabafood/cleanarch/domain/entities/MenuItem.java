@@ -21,5 +21,25 @@ public class MenuItem {
     BigDecimal price;
     boolean inRestaurantOnly;
     String imagePath;
-    UUID restaurantId;
+    Restaurant restaurant;
+
+    public MenuItem copyWith(
+            String name,
+            String description,
+            BigDecimal price,
+            Boolean inRestaurantOnly,
+            String imagePath,
+            Restaurant restaurant
+    ) {
+        return new MenuItem(
+                this.id,
+                name != null ? name : this.name,
+                description != null ? description : this.description,
+                price != null ? price : this.price,
+                inRestaurantOnly != null ? inRestaurantOnly : this.inRestaurantOnly,
+                imagePath != null ? imagePath : this.imagePath,
+                restaurant != null ? restaurant : this.restaurant
+        );
+    }
+
 }

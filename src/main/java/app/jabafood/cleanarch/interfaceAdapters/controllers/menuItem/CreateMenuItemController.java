@@ -1,0 +1,32 @@
+package app.jabafood.cleanarch.interfaceAdapters.controllers.menuItem;
+
+import app.jabafood.cleanarch.application.useCases.menuItem.CreateMenuItemUseCase;
+import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemRequestDTO;
+import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("api/v1/menu-items/create")
+public class CreateMenuItemController {
+
+    private final CreateMenuItemUseCase createMenuItemUseCase;
+    private final MenuItemMapper menuItemMapper;
+
+    public CreateMenuItemController(CreateMenuItemUseCase createMenuItemUseCase, MenuItemMapper menuItemMapper) {
+        this.createMenuItemUseCase = createMenuItemUseCase;
+        this.menuItemMapper = menuItemMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<MenuItemRequestDTO> create(@Valid @RequestBody MenuItemRequestDTO menuItemRequestDTO) {
+        var menuItem = menuItemMapper.toDomain(menuItemRequestDTO);
+        var createdMenuItem = createMenuItemUseCase.execute(menuItem);
+        return ResponseEntity.ok(menuItemMapper.toDTO(createdMenuItem));
+    }
+
+}
