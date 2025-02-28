@@ -34,4 +34,9 @@ public class RestaurantUseCaseConfig {
         return new ListRestaurantsUseCase(restaurantGateway);
     }
 
+    @Bean
+    public ListRestaurantsByOwnerUseCase listRestaurantsByOwnerUseCase(IRestaurantGateway restaurantGateway) {
+        return new ListRestaurantsByOwnerUseCase(restaurantGateway);
+    }
+
 }

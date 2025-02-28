@@ -13,5 +13,7 @@ public interface IRestaurantGateway {
 
     List<Restaurant> findAll();
 
+    List<Restaurant> findByOwnerId(UUID ownerId);
+
     void delete(UUID id);
 }

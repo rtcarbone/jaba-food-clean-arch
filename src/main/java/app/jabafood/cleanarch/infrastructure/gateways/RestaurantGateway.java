@@ -41,6 +41,14 @@ public class RestaurantGateway implements IRestaurantGateway {
     }
 
     @Override
+    public List<Restaurant> findByOwnerId(UUID ownerId) {
+        return jpaRepository.findByOwnerId(ownerId)
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void delete(UUID id) {
         jpaRepository.deleteById(id);
     }
