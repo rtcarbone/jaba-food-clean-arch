@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public record UserRequestDTO(
-        UUID id,
-
         @NotBlank(message = "Name cannot be empty")
         String name,
 
@@ -20,14 +18,11 @@ public record UserRequestDTO(
         @NotBlank(message = "Email cannot be empty")
         String email,
 
-        @NotBlank(message = "Username cannot be empty")
-        String username,
-
-        @NotNull(message = "User type is required")
-        UserType userType,
+        @NotBlank(message = "Login cannot be empty")
+        String login,
 
         @NonNull
-        @Schema(description = "Password of the user", example = "password123", writeOnly = true)
+        @Schema(description = "Password of the user", example = "password123")
         String password,
 
         @NotNull(message = "Address is required")

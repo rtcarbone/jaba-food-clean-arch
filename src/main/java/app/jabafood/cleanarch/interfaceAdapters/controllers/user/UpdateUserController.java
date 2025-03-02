@@ -2,6 +2,7 @@ package app.jabafood.cleanarch.interfaceAdapters.controllers.user;
 
 import app.jabafood.cleanarch.application.useCases.user.UpdateUserUseCase;
 import app.jabafood.cleanarch.interfaceAdapters.dto.UserRequestDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.UserResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.UserMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UpdateUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserRequestDTO> update(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
         var user = userMapper.toDomain(userRequestDTO);
         var updatedUser = updateUserUseCase.execute(id, user);
         return ResponseEntity.ok(userMapper.toDTO(updatedUser));
