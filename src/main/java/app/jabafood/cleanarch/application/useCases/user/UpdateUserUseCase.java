@@ -4,27 +4,21 @@ import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.exceptions.EmailAlreadyInUseException;
 import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+import app.jabafood.cleanarch.domain.validations.EmailFormatValidation;
+import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class UpdateUserUseCase {
-    private final IUserGateway userGateway;
 
-    public UpdateUserUseCase(IUserGateway userGateway) {
-        this.userGateway = userGateway;
-    }
+    private final IUserGateway userGateway;
 
     public User execute(UUID id, User updatedData) {
         User existingUser = userGateway.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        if (updatedData.getEmail() != null && !updatedData.getEmail()
-                .equals(existingUser.getEmail())) {
-            userGateway.findByEmail(updatedData.getEmail())
-                    .ifPresent(user -> {
-                        throw new EmailAlreadyInUseException("Email already in use");
-                    });
-        }
+        validateEmailChange(existingUser, updatedData.getEmail());
 
         User updatedUser = existingUser.copyWith(
                 updatedData.getName(),
@@ -39,4 +33,18 @@ public class UpdateUserUseCase {
 
         return userGateway.save(updatedUser);
     }
+
+    private void validateEmailChange(User existingUser, String newEmail) {
+        if (newEmail == null || newEmail.equals(existingUser.getEmail())) {
+            return;
+        }
+
+        EmailFormatValidation.validate(newEmail);
+
+        userGateway.findByEmail(newEmail)
+                .ifPresent(user -> {
+                    throw new EmailAlreadyInUseException("Email already in use");
+                });
+    }
+
 }

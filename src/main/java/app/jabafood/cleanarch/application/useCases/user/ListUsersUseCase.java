@@ -2,17 +2,17 @@ package app.jabafood.cleanarch.application.useCases.user;
 
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class ListUsersUseCase {
-    private final IUserGateway userGateway;
 
-    public ListUsersUseCase(IUserGateway userGateway) {
-        this.userGateway = userGateway;
-    }
+    private final IUserGateway userGateway;
 
     public List<User> execute() {
         return userGateway.findAll();
     }
+
 }

@@ -2,16 +2,15 @@ package app.jabafood.cleanarch.application.useCases.user;
 
 import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class DeleteUserUseCase {
-    private final IUserGateway userGateway;
 
-    public DeleteUserUseCase(IUserGateway userGateway) {
-        this.userGateway = userGateway;
-    }
+    private final IUserGateway userGateway;
 
     public void execute(UUID id) {
 

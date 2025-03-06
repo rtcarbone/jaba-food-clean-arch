@@ -5,16 +5,14 @@ import app.jabafood.cleanarch.domain.exceptions.InvalidPasswordException;
 import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.valueObjects.UserPassword;
+import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class UpdateUserPasswordUseCase {
 
     private final IUserGateway userGateway;
-
-    public UpdateUserPasswordUseCase(IUserGateway userGateway) {
-        this.userGateway = userGateway;
-    }
 
     public User execute(UUID id, UserPassword userPassword) {
         var user = userGateway.findById(id)
@@ -40,4 +38,5 @@ public class UpdateUserPasswordUseCase {
 
         return userGateway.save(updatedUser);
     }
+
 }
