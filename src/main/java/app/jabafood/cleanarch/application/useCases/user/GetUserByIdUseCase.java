@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.application.useCases.user;
 
 import app.jabafood.cleanarch.domain.entities.User;
+import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 
 import java.util.UUID;
@@ -14,7 +15,7 @@ public class GetUserByIdUseCase {
 
     public User execute(UUID id) {
         return userGateway.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }
 

@@ -19,6 +19,11 @@ public class UserUseCaseConfig {
     }
 
     @Bean
+    public UpdateUserPasswordUseCase updateUserPasswordUseCase(IUserGateway userGateway) {
+        return new UpdateUserPasswordUseCase(userGateway);
+    }
+
+    @Bean
     public UpdateUserUseCase updateUserUseCase(IUserGateway userGateway) {
         return new UpdateUserUseCase(userGateway);
     }
