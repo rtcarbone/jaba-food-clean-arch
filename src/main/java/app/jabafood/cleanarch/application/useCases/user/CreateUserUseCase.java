@@ -9,42 +9,43 @@ import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import java.util.Optional;
 
 public class CreateUserUseCase {
-  private final IUserGateway userGateway;
+    private final IUserGateway userGateway;
 
-  public CreateUserUseCase(IUserGateway userGateway) {
-    this.userGateway = userGateway;
-  }
-
-  public User execute(User user) {
-    Optional<User> existingEmail = userGateway.findByEmail(user.getEmail());
-    Optional<User> existingLogin = userGateway.findByLogin(user.getLogin());
-
-    existingLogin
-            .ifPresent(u -> {
-              throw new LoginAlreadyInUseException("Login already in use");
-            });
-    if (user.getId() != null) {
-      Optional<User> existingId = userGateway.findById(user.getId());
-      existingId
-              .ifPresent(u -> {
-                throw new UserAlreadyExistsException("User already exists");
-              });
+    public CreateUserUseCase(IUserGateway userGateway) {
+        this.userGateway = userGateway;
     }
 
-    existingEmail
-            .ifPresent(u -> {
-              throw new EmailAlreadyInUseException("Email already in use");
-            });
+    public User execute(User user) {
+        Optional<User> existingEmail = userGateway.findByEmail(user.getEmail());
+        Optional<User> existingLogin = userGateway.findByLogin(user.getLogin());
 
-    User newUser = user.copyWith(
-            user.getName(),
-            user.getEmail(),
-            user.getLogin(),
-            user.getPassword(),
-            user.getUserType(),
-            user.getAddress());
-    newUser.validate();
+        existingLogin
+                .ifPresent(u -> {
+                    throw new LoginAlreadyInUseException("Login already in use");
+                });
+        if (user.getId() != null) {
+            Optional<User> existingId = userGateway.findById(user.getId());
+            existingId
+                    .ifPresent(u -> {
+                        throw new UserAlreadyExistsException("User already exists");
+                    });
+        }
 
-    return userGateway.save(newUser);
-  }
+        existingEmail
+                .ifPresent(u -> {
+                    throw new EmailAlreadyInUseException("Email already in use");
+                });
+
+        User newUser = user.copyWith(
+                user.getName(),
+                user.getEmail(),
+                user.getLogin(),
+                user.getPassword(),
+                user.getUserType(),
+                user.getAddress());
+
+        newUser.validate();
+
+        return userGateway.save(newUser);
+    }
 }

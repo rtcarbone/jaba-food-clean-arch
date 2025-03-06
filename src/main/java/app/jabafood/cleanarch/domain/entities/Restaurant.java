@@ -3,6 +3,7 @@ package app.jabafood.cleanarch.domain.entities;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.exceptions.InvalidClosingTimeException;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantMandatoryFieldException;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +17,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @EqualsAndHashCode
 @FieldDefaults(level = PRIVATE, makeFinal = true)
+@AllArgsConstructor
 public class Restaurant {
     UUID id;
     String name;
@@ -25,18 +27,6 @@ public class Restaurant {
     LocalTime closingTime;
     User owner;
     List<MenuItem> menuItems;
-
-    public Restaurant(UUID id, String name, Address address, CuisineType cuisineType,
-                      LocalTime openingTime, LocalTime closingTime, User owner, List<MenuItem> menuItems) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.cuisineType = cuisineType;
-        this.openingTime = openingTime;
-        this.closingTime = closingTime;
-        this.owner = owner;
-        this.menuItems = menuItems;
-    }
 
     public Restaurant copyWith(String name, Address address, CuisineType cuisineType,
                                LocalTime openingTime, LocalTime closingTime, User owner) {

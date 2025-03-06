@@ -3,16 +3,16 @@ package app.jabafood.cleanarch.interfaceAdapters.controllers.config;
 import app.jabafood.cleanarch.domain.exceptions.*;
 import app.jabafood.cleanarch.interfaceAdapters.dto.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,12 +34,12 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 httpMethod,
                 requestPath,
-                LocalDateTime.now().format(formatter), // Data mais legível
+                LocalDateTime.now()
+                        .format(formatter), // Data mais legível
                 status.value()
         );
         return new ResponseEntity<>(errorResponse, status);
     }
-
 
     @ExceptionHandler({DataIntegrityViolationException.class, ConstraintViolationException.class})
     public ResponseEntity<ErrorResponseDTO> handleDatabaseConstraintViolation(Exception ex, WebRequest request) {
@@ -49,7 +49,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT
         );
     }
-
 
     @ExceptionHandler({EmailAlreadyInUseException.class, LoginAlreadyInUseException.class})
     public ResponseEntity<ErrorResponseDTO> handleAlreadyInUseException(RuntimeException ex, WebRequest request) {

@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 public record UserRequestDTO(
         @NotBlank(message = "Name cannot be empty")
@@ -24,6 +23,9 @@ public record UserRequestDTO(
         @NonNull
         @Schema(description = "Password of the user", example = "password123")
         String password,
+
+        @NotNull(message = "User type cannot be null")
+        UserType userType,
 
         @NotNull(message = "Address is required")
         @Schema(description = "Address of the user")

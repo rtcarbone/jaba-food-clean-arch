@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 
@@ -22,13 +21,9 @@ public record UserUpdateRequestDTO(
         @NotBlank(message = "Login cannot be empty")
         String login,
 
-        @NonNull
-        @Schema(description = "Password of the user", example = "password123")
-        String password,
-
         @NotNull(message = "Address is required")
         @Schema(description = "Address of the user")
-        AddressDTO address) {
-
+        AddressDTO address
+) implements Serializable {
 }
 

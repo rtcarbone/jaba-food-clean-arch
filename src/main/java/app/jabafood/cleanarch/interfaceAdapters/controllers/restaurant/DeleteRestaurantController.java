@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/restaurants/delete")
+@RequestMapping("api/v1/restaurants/{id}/delete")
 public class DeleteRestaurantController {
 
     private final DeleteRestaurantUseCase deleteRestaurantUseCase;
@@ -19,7 +19,7 @@ public class DeleteRestaurantController {
         this.deleteRestaurantUseCase = deleteRestaurantUseCase;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteRestaurantUseCase.execute(id);
         return ResponseEntity.noContent()

@@ -10,19 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users/delete")
+@RequestMapping("api/v1/users/{id}/delete")
 public class DeleteUserController {
 
-  private final DeleteUserUseCase deleteUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
 
-  public DeleteUserController(DeleteUserUseCase deleteUserUseCase) {
-    this.deleteUserUseCase = deleteUserUseCase;
-  }
+    public DeleteUserController(DeleteUserUseCase deleteUserUseCase) {
+        this.deleteUserUseCase = deleteUserUseCase;
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable UUID id) {
-    deleteUserUseCase.execute(id);
-    return ResponseEntity.noContent()
-            .build();
-  }
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        deleteUserUseCase.execute(id);
+        return ResponseEntity.noContent()
+                .build();
+    }
+
 }

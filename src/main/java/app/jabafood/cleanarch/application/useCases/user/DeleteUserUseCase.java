@@ -1,6 +1,5 @@
 package app.jabafood.cleanarch.application.useCases.user;
 
-import app.jabafood.cleanarch.domain.exceptions.RestaurantNotFoundException;
 import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 
@@ -16,9 +15,13 @@ public class DeleteUserUseCase {
 
     public void execute(UUID id) {
 
-        if(userGateway.findById(id).isEmpty() || !Objects.equals(id, userGateway.findById(id).get().getId())) {
+        if (userGateway.findById(id)
+                    .isEmpty() || !Objects.equals(id, userGateway.findById(id)
+                .get()
+                .getId())) {
             throw new UserNotFoundException(id);
         }
+
         userGateway.delete(id);
     }
 }

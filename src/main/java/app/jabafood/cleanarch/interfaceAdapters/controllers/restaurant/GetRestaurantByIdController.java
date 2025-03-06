@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/restaurants")
+@RequestMapping("api/v1/restaurants/{id}")
 public class GetRestaurantByIdController {
 
     private final GetRestaurantByIdUseCase getRestaurantByIdUseCase;
@@ -23,7 +23,7 @@ public class GetRestaurantByIdController {
         this.restaurantMapper = restaurantMapper;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<RestaurantResponseDTO> findById(@PathVariable UUID id) {
         var restaurant = getRestaurantByIdUseCase.execute(id);
         return ResponseEntity.ok(restaurantMapper.toDTO(restaurant));

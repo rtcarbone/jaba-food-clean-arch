@@ -1,7 +1,6 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers.user;
 
 import app.jabafood.cleanarch.application.useCases.user.GetUserByIdUseCase;
-import app.jabafood.cleanarch.interfaceAdapters.dto.UserRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.dto.UserResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.UserMapper;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v1/users/{id}")
 public class GetUserByIdController {
 
     private final GetUserByIdUseCase getUserByIdUseCase;
@@ -24,7 +23,7 @@ public class GetUserByIdController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<UserResponseDTO> findById(@PathVariable UUID id) {
         var user = getUserByIdUseCase.execute(id);
         return ResponseEntity.ok(userMapper.toDTO(user));

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users/update")
+@RequestMapping("api/v1/users/{id}/update")
 public class UpdateUserController {
 
     private final UpdateUserUseCase updateUserUseCase;
@@ -22,7 +22,7 @@ public class UpdateUserController {
         this.userMapper = userMapper;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<UserResponseDTO> update(@PathVariable UUID id, @RequestBody UserUpdateRequestDTO userRequestDTO) {
         var user = userMapper.toDomainUpdate(userRequestDTO);
         var updatedUser = updateUserUseCase.execute(id, user);

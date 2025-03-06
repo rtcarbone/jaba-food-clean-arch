@@ -15,12 +15,12 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @AllArgsConstructor
 public class Address {
-    private final UUID id;
-    private final String street;
-    private final String city;
-    private final String state;
-    private final String zipCode;
-    private final String country;
+    UUID id;
+    String street;
+    String city;
+    String state;
+    String zipCode;
+    String country;
 
     public Address copyWith(String street, String city, String state, String zipCode, String country) {
         return new Address(

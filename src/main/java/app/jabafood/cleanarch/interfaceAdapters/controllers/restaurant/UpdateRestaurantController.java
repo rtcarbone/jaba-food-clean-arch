@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/restaurants/update")
+@RequestMapping("api/v1/restaurants/{id}/update")
 public class UpdateRestaurantController {
     private final UpdateRestaurantUseCase updateRestaurantUseCase;
     private final RestaurantMapper restaurantMapper;
@@ -22,7 +22,7 @@ public class UpdateRestaurantController {
         this.restaurantMapper = restaurantMapper;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<RestaurantResponseDTO> update(@PathVariable UUID id, @RequestBody RestaurantRequestDTO restaurantRequestDTO) {
         var restaurant = restaurantMapper.toDomain(restaurantRequestDTO);
         var updatedRestaurant = updateRestaurantUseCase.execute(id, restaurant);

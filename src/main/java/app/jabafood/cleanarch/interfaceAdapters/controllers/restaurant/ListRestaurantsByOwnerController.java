@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/restaurants/list/owner")
+@RequestMapping("api/v1/restaurants/list/owner/{ownerId}")
 public class ListRestaurantsByOwnerController {
 
     private final ListRestaurantsByOwnerUseCase listRestaurantsByOwnerUseCase;
@@ -24,7 +24,7 @@ public class ListRestaurantsByOwnerController {
         this.restaurantMapper = restaurantMapper;
     }
 
-    @GetMapping("/{ownerId}")
+    @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> findByOwner(@PathVariable UUID ownerId) {
         return ResponseEntity.ok(restaurantMapper.toDTOList(listRestaurantsByOwnerUseCase.execute(ownerId)));
     }
