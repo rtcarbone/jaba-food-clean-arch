@@ -68,11 +68,11 @@ public class GlobalExceptionHandler {
             AddressMandatoryFieldException.class,
             EmailFormatException.class,
             InvalidPageValueException.class,
-            InvalidPasswordException.class, // Removido duplicata
+            InvalidPasswordException.class,
             InvalidSizeValueException.class,
             MissingPasswordException.class,
             PasswordNotMatchException.class,
-            UserMandatoryFieldException.class, // Removido duplicata
+            UserMandatoryFieldException.class,
             RestaurantMandatoryFieldException.class,
             RestaurantOwnerInvalidException.class
     })
