@@ -9,11 +9,14 @@ import java.util.UUID;
 public interface IUserGateway {
     User save(User user);
 
+    Optional<User> findByEmail(String email);
+
     Optional<User> findById(UUID id);
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByLogin(String login);
 
     List<User> findAll();
 
     void delete(UUID id);
+
 }

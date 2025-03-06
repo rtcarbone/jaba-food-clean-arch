@@ -27,14 +27,20 @@ public class UserGateway implements IUserGateway {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return jpaRepository.findByEmail(email)
+                .map(mapper::toDomain);
+    }
+
+    @Override
     public Optional<User> findById(UUID id) {
         return jpaRepository.findById(id)
                 .map(mapper::toDomain);
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return jpaRepository.findByUsername(username)
+    public Optional<User> findByLogin(String login) {
+        return jpaRepository.findByLogin(login)
                 .map(mapper::toDomain);
     }
 

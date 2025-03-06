@@ -8,15 +8,16 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
-import java.util.UUID;
 
-public record UserRequestDTO(
+public record UserUpdateRequestDTO(
         @NotBlank(message = "Name cannot be empty")
         String name,
 
         @Email(message = "Invalid email format")
         @NotBlank(message = "Email cannot be empty")
         String email,
+
+        UserType userType,
 
         @NotBlank(message = "Login cannot be empty")
         String login,
@@ -27,6 +28,7 @@ public record UserRequestDTO(
 
         @NotNull(message = "Address is required")
         @Schema(description = "Address of the user")
-        AddressDTO address
-) implements Serializable {
+        AddressDTO address) {
+
 }
+

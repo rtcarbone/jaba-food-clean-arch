@@ -17,16 +17,17 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
     private String email;
-    private String username;
+    private String login;
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserType userType;
+    @Column(nullable = false)
+    private UserType userType = UserType.CUSTOMER;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", nullable = false, unique = true)

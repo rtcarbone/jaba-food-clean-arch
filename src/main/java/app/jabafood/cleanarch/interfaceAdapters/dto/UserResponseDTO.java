@@ -10,23 +10,12 @@ import org.springframework.lang.NonNull;
 import java.io.Serializable;
 import java.util.UUID;
 
-public record UserRequestDTO(
-        @NotBlank(message = "Name cannot be empty")
+public record UserResponseDTO(
+        UUID id,
         String name,
-
-        @Email(message = "Invalid email format")
-        @NotBlank(message = "Email cannot be empty")
         String email,
-
-        @NotBlank(message = "Login cannot be empty")
         String login,
-
-        @NonNull
-        @Schema(description = "Password of the user", example = "password123")
-        String password,
-
-        @NotNull(message = "Address is required")
-        @Schema(description = "Address of the user")
+        UserType userType,
         AddressDTO address
 ) implements Serializable {
 }

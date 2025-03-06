@@ -13,17 +13,16 @@ import java.util.UUID;
 @RequestMapping("api/v1/users/delete")
 public class DeleteUserController {
 
-    private final DeleteUserUseCase deleteUserUseCase;
+  private final DeleteUserUseCase deleteUserUseCase;
 
-    public DeleteUserController(DeleteUserUseCase deleteUserUseCase) {
-        this.deleteUserUseCase = deleteUserUseCase;
-    }
+  public DeleteUserController(DeleteUserUseCase deleteUserUseCase) {
+    this.deleteUserUseCase = deleteUserUseCase;
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        deleteUserUseCase.execute(id);
-        return ResponseEntity.noContent()
-                .build();
-    }
-
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    deleteUserUseCase.execute(id);
+    return ResponseEntity.noContent()
+            .build();
+  }
 }

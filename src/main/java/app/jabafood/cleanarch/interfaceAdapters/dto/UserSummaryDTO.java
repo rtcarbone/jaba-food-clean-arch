@@ -5,6 +5,6 @@ import java.util.UUID;
 
 public record UserSummaryDTO(
         UUID id,
-        String username
+        String login
 ) implements Serializable {
 }
