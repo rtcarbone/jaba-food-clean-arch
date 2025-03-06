@@ -9,7 +9,6 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class DeleteUserUseCase {
-
     private final IUserGateway userGateway;
 
     public void execute(UUID id) {

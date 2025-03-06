@@ -2,15 +2,13 @@ package app.jabafood.cleanarch.application.useCases.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
+import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class UpdateMenuItemUseCase {
     private final IMenuItemGateway menuItemGateway;
-
-    public UpdateMenuItemUseCase(IMenuItemGateway menuItemGateway) {
-        this.menuItemGateway = menuItemGateway;
-    }
 
     public MenuItem execute(UUID id, MenuItem updatedData) {
         MenuItem existingItem = menuItemGateway.findById(id)

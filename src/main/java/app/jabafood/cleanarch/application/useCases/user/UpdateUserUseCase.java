@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class UpdateUserUseCase {
-
     private final IUserGateway userGateway;
 
     public User execute(UUID id, User updatedData) {
@@ -46,5 +45,4 @@ public class UpdateUserUseCase {
                     throw new EmailAlreadyInUseException("Email already in use");
                 });
     }
-
 }

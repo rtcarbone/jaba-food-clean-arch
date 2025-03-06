@@ -12,11 +12,9 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CreateUserUseCase {
-
     private final IUserGateway userGateway;
 
     public User execute(User user) {
-
         EmailFormatValidation.validate(user.getEmail());
 
         Optional<User> existingEmail = userGateway.findByEmail(user.getEmail());
@@ -52,5 +50,4 @@ public class CreateUserUseCase {
 
         return userGateway.save(newUser);
     }
-
 }

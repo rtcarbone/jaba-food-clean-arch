@@ -8,11 +8,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ListUsersUseCase {
-
     private final IUserGateway userGateway;
 
     public List<User> execute() {
         return userGateway.findAll();
     }
-
 }

@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class UpdateUserPasswordUseCase {
-
     private final IUserGateway userGateway;
 
     public User execute(UUID id, UserPassword userPassword) {
@@ -38,5 +37,4 @@ public class UpdateUserPasswordUseCase {
 
         return userGateway.save(updatedUser);
     }
-
 }

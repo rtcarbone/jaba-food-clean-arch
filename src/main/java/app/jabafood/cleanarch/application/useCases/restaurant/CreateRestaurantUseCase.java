@@ -8,17 +8,14 @@ import app.jabafood.cleanarch.domain.exceptions.RestaurantOwnerInvalidException;
 import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class CreateRestaurantUseCase {
     private final IRestaurantGateway restaurantGateway;
     private final IUserGateway userGateway;
-
-    public CreateRestaurantUseCase(IRestaurantGateway restaurantGateway, IUserGateway userGateway) {
-        this.restaurantGateway = restaurantGateway;
-        this.userGateway = userGateway;
-    }
 
     public Restaurant execute(Restaurant restaurant) {
 
