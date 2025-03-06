@@ -36,7 +36,6 @@ public class UserPassword {
             throw new PasswordNotMatchException("New password and repeat new password do not match");
         }
     }
-
 }
 
 
