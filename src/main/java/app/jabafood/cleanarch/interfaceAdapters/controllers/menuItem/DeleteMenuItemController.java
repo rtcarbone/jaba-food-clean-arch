@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/menu-items/delete")
+@RequestMapping("api/v1/menu-items/{id}/delete")
 @RequiredArgsConstructor
 public class DeleteMenuItemController {
     private final DeleteMenuItemUseCase deleteMenuItemUseCase;
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteMenuItemUseCase.execute(id);
         return ResponseEntity.noContent()

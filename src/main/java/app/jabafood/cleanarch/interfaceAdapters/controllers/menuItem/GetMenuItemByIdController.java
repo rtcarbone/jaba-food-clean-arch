@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/menu-items")
+@RequestMapping("api/v1/menu-items/{id}")
 @RequiredArgsConstructor
 public class GetMenuItemByIdController {
     private final GetMenuItemByIdUseCase getMenuItemByIdUseCase;
     private final MenuItemMapper menuItemMapper;
 
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<MenuItemRequestDTO> findById(@PathVariable UUID id) {
         var menuItem = getMenuItemByIdUseCase.execute(id);
         return ResponseEntity.ok(menuItemMapper.toDTO(menuItem));

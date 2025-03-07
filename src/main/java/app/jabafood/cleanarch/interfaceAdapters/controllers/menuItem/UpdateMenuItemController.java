@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/menu-items/update")
+@RequestMapping("api/v1/menu-items/{id}/update")
 @RequiredArgsConstructor
 public class UpdateMenuItemController {
     private final UpdateMenuItemUseCase updateMenuItemUseCase;
     private final MenuItemMapper menuItemMapper;
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<MenuItemRequestDTO> update(@PathVariable UUID id, @Valid @RequestBody MenuItemRequestDTO menuItemRequestDTO) {
         var menuItem = menuItemMapper.toDomain(menuItemRequestDTO);
         var updatedMenuItem = updateMenuItemUseCase.execute(id, menuItem);

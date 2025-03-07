@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/menu-items/list/restaurant")
+@RequestMapping("api/v1/menu-items/list/restaurant/{restaurantId}")
 @RequiredArgsConstructor
 public class ListMenuItemsByRestaurantController {
     private final ListMenuItemsByRestaurantUseCase listMenuItemsByRestaurantUseCase;
     private final MenuItemMapper menuItemMapper;
 
-    @GetMapping("/{restaurantId}")
+    @GetMapping
     public ResponseEntity<List<MenuItemRequestDTO>> findByRestaurant(@PathVariable UUID restaurantId) {
         return ResponseEntity.ok(menuItemMapper.toDTOList(listMenuItemsByRestaurantUseCase.execute(restaurantId)));
     }
