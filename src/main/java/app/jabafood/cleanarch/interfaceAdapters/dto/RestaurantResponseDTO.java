@@ -9,7 +9,7 @@ import java.util.UUID;
 public record RestaurantResponseDTO(
         UUID id,
         String name,
-        AddressDTO address,
+        AddressResponseDTO address,
         CuisineType cuisineType,
         LocalTime openingTime,
         LocalTime closingTime,

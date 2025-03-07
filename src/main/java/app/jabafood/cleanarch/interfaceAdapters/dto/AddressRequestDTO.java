@@ -4,11 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
-import java.util.UUID;
 
-public record AddressDTO(
-        UUID id,
-
+public record AddressRequestDTO(
         @NotBlank(message = "Street cannot be blank")
         @Size(max = 255, message = "Street name is too long")
         String street,

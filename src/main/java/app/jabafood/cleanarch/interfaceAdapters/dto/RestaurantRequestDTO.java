@@ -10,14 +10,12 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public record RestaurantRequestDTO(
-        UUID id,
-
         @NotBlank(message = "Restaurant name cannot be blank")
         @Size(max = 255, message = "Restaurant name must be at most 255 characters")
         String name,
 
         @NotNull(message = "Address cannot be null")
-        AddressDTO address,
+        AddressRequestDTO address,
 
         @NotNull(message = "Cuisine type cannot be null")
         CuisineType cuisineType,
@@ -29,6 +27,6 @@ public record RestaurantRequestDTO(
         LocalTime closingTime,
 
         @NotNull(message = "Owner cannot be null")
-        UserRequestDTO owner
+        UUID ownerId
 ) implements Serializable {
 }

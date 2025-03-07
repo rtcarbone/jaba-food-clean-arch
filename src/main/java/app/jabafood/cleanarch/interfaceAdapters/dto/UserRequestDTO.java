@@ -29,6 +29,6 @@ public record UserRequestDTO(
 
         @NotNull(message = "Address is required")
         @Schema(description = "Address of the user")
-        AddressDTO address
+        AddressRequestDTO address
 ) implements Serializable {
 }
