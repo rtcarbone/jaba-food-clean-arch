@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers.user;
 
 import app.jabafood.cleanarch.application.useCases.user.DeleteUserUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,13 +12,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/users/{id}/delete")
+@RequiredArgsConstructor
 public class DeleteUserController {
-
     private final DeleteUserUseCase deleteUserUseCase;
-
-    public DeleteUserController(DeleteUserUseCase deleteUserUseCase) {
-        this.deleteUserUseCase = deleteUserUseCase;
-    }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
@@ -25,5 +22,4 @@ public class DeleteUserController {
         return ResponseEntity.noContent()
                 .build();
     }
-
 }

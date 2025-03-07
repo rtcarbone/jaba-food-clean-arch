@@ -4,6 +4,7 @@ import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.MenuItemEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.MenuItemJpaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,14 +13,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class MenuItemGateway implements IMenuItemGateway {
     private final MenuItemJpaRepository jpaRepository;
     private final MenuItemEntityMapper mapper;
-
-    public MenuItemGateway(MenuItemJpaRepository jpaRepository, MenuItemEntityMapper mapper) {
-        this.jpaRepository = jpaRepository;
-        this.mapper = mapper;
-    }
 
     @Override
     public MenuItem save(MenuItem menuItem) {

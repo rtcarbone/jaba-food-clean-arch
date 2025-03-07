@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers.menuItem;
 
 import app.jabafood.cleanarch.application.useCases.menuItem.DeleteMenuItemUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,13 +12,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/menu-items/delete")
+@RequiredArgsConstructor
 public class DeleteMenuItemController {
-
     private final DeleteMenuItemUseCase deleteMenuItemUseCase;
-
-    public DeleteMenuItemController(DeleteMenuItemUseCase deleteMenuItemUseCase) {
-        this.deleteMenuItemUseCase = deleteMenuItemUseCase;
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
@@ -25,5 +22,4 @@ public class DeleteMenuItemController {
         return ResponseEntity.noContent()
                 .build();
     }
-
 }

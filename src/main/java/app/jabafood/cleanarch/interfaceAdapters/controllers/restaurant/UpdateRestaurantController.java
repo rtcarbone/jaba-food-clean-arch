@@ -4,6 +4,7 @@ import app.jabafood.cleanarch.application.useCases.restaurant.UpdateRestaurantUs
 import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.RestaurantMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/restaurants/{id}/update")
+@RequiredArgsConstructor
 public class UpdateRestaurantController {
     private final UpdateRestaurantUseCase updateRestaurantUseCase;
     private final RestaurantMapper restaurantMapper;
-
-    public UpdateRestaurantController(
-            UpdateRestaurantUseCase updateRestaurantUseCase,
-            RestaurantMapper restaurantMapper) {
-        this.updateRestaurantUseCase = updateRestaurantUseCase;
-        this.restaurantMapper = restaurantMapper;
-    }
 
     @PutMapping
     public ResponseEntity<RestaurantResponseDTO> update(@PathVariable UUID id, @RequestBody RestaurantRequestDTO restaurantRequestDTO) {
@@ -28,5 +23,4 @@ public class UpdateRestaurantController {
         var updatedRestaurant = updateRestaurantUseCase.execute(id, restaurant);
         return ResponseEntity.ok(restaurantMapper.toDTO(updatedRestaurant));
     }
-
 }

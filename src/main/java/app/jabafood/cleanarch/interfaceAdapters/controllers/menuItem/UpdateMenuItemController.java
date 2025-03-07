@@ -4,6 +4,7 @@ import app.jabafood.cleanarch.application.useCases.menuItem.UpdateMenuItemUseCas
 import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,15 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/menu-items/update")
+@RequiredArgsConstructor
 public class UpdateMenuItemController {
-
     private final UpdateMenuItemUseCase updateMenuItemUseCase;
     private final MenuItemMapper menuItemMapper;
-
-    public UpdateMenuItemController(UpdateMenuItemUseCase updateMenuItemUseCase, MenuItemMapper menuItemMapper) {
-        this.updateMenuItemUseCase = updateMenuItemUseCase;
-        this.menuItemMapper = menuItemMapper;
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<MenuItemRequestDTO> update(@PathVariable UUID id, @Valid @RequestBody MenuItemRequestDTO menuItemRequestDTO) {
@@ -27,5 +23,4 @@ public class UpdateMenuItemController {
         var updatedMenuItem = updateMenuItemUseCase.execute(id, menuItem);
         return ResponseEntity.ok(menuItemMapper.toDTO(updatedMenuItem));
     }
-
 }

@@ -4,6 +4,7 @@ import app.jabafood.cleanarch.application.useCases.menuItem.CreateMenuItemUseCas
 import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,15 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/menu-items/create")
+@RequiredArgsConstructor
 public class CreateMenuItemController {
 
     private final CreateMenuItemUseCase createMenuItemUseCase;
     private final MenuItemMapper menuItemMapper;
-
-    public CreateMenuItemController(CreateMenuItemUseCase createMenuItemUseCase, MenuItemMapper menuItemMapper) {
-        this.createMenuItemUseCase = createMenuItemUseCase;
-        this.menuItemMapper = menuItemMapper;
-    }
 
     @PostMapping
     public ResponseEntity<MenuItemRequestDTO> create(@Valid @RequestBody MenuItemRequestDTO menuItemRequestDTO) {

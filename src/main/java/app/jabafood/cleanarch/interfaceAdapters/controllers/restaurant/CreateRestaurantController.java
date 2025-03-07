@@ -4,6 +4,7 @@ import app.jabafood.cleanarch.application.useCases.restaurant.CreateRestaurantUs
 import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantRequestDTO;
 import app.jabafood.cleanarch.interfaceAdapters.dto.RestaurantResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.RestaurantMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,16 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/restaurants/create")
+@RequiredArgsConstructor
 public class CreateRestaurantController {
-
     private final CreateRestaurantUseCase createRestaurantUseCase;
     private final RestaurantMapper restaurantMapper;
-
-    public CreateRestaurantController(CreateRestaurantUseCase createRestaurantUseCase,
-                                      RestaurantMapper restaurantMapper) {
-        this.createRestaurantUseCase = createRestaurantUseCase;
-        this.restaurantMapper = restaurantMapper;
-    }
 
     @PostMapping
     public ResponseEntity<RestaurantResponseDTO> create(@RequestBody RestaurantRequestDTO restaurantRequestDTO) {
@@ -29,5 +24,4 @@ public class CreateRestaurantController {
         var createdRestaurant = createRestaurantUseCase.execute(restaurant);
         return ResponseEntity.ok(restaurantMapper.toDTO(createdRestaurant));
     }
-
 }

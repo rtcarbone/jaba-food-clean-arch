@@ -4,6 +4,7 @@ import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.infrastructure.persistence.mappers.RestaurantEntityMapper;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,14 +13,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class RestaurantGateway implements IRestaurantGateway {
     private final RestaurantJpaRepository jpaRepository;
     private final RestaurantEntityMapper mapper;
-
-    public RestaurantGateway(RestaurantJpaRepository jpaRepository, RestaurantEntityMapper mapper) {
-        this.jpaRepository = jpaRepository;
-        this.mapper = mapper;
-    }
 
     @Override
     public Restaurant save(Restaurant restaurant) {
