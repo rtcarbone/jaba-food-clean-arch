@@ -11,6 +11,8 @@ public interface IMenuItemGateway {
 
     Optional<MenuItem> findById(UUID id);
 
+    List<MenuItem> findAll();
+
     List<MenuItem> findByRestaurantId(UUID restaurantId);
 
     void delete(UUID id);

@@ -1,21 +1,16 @@
 package app.jabafood.cleanarch.interfaceAdapters.mappers;
 
 import app.jabafood.cleanarch.domain.entities.User;
-import app.jabafood.cleanarch.interfaceAdapters.dto.UserDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.UserRequestDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    UserRequestDTO toDTO(User user);
 
-    UserDTO toDTO(User user);
+    User toDomain(UserRequestDTO dto);
 
-    User toDomain(UserDTO dto);
-
-    List<UserDTO> toDTOList(List<User> users);
-
-    List<User> toDomainList(List<UserDTO> dtos);
+    List<UserRequestDTO> toDTOList(List<User> users);
 }

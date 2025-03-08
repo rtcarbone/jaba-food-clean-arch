@@ -1,5 +1,6 @@
 package app.jabafood.cleanarch.domain.entities;
 
+import app.jabafood.cleanarch.domain.exceptions.AddressMandatoryFieldException;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,5 +31,28 @@ public class Address {
                 zipCode != null ? zipCode : this.zipCode,
                 country != null ? country : this.country
         );
+    }
+
+    public void validate() {
+        if (street == null || street.trim()
+                .isEmpty()) {
+            throw new AddressMandatoryFieldException("street");
+        }
+        if (city == null || city.trim()
+                .isEmpty()) {
+            throw new AddressMandatoryFieldException("city");
+        }
+        if (state == null || state.trim()
+                .isEmpty()) {
+            throw new AddressMandatoryFieldException("state");
+        }
+        if (zipCode == null || zipCode.trim()
+                .isEmpty()) {
+            throw new AddressMandatoryFieldException("zipCode");
+        }
+        if (country == null || country.trim()
+                .isEmpty()) {
+            throw new AddressMandatoryFieldException("country");
+        }
     }
 }

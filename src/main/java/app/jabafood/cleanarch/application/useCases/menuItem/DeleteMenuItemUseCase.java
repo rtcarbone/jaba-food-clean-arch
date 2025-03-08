@@ -1,5 +1,6 @@
 package app.jabafood.cleanarch.application.useCases.menuItem;
 
+import app.jabafood.cleanarch.domain.exceptions.MenuItemNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 
 import java.util.UUID;
@@ -14,7 +15,7 @@ public class DeleteMenuItemUseCase {
     public void execute(UUID id) {
         if (menuItemGateway.findById(id)
                 .isEmpty()) {
-            throw new RuntimeException("Menu item not found");
+            throw new MenuItemNotFoundException(id);
         }
         menuItemGateway.delete(id);
     }
