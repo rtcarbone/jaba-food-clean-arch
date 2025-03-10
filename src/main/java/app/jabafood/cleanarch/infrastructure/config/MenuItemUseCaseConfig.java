@@ -1,8 +1,8 @@
 package app.jabafood.cleanarch.infrastructure.config;
 
-import app.jabafood.cleanarch.application.useCases.menuItem.*;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
+import app.jabafood.cleanarch.domain.useCases.menuItem.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

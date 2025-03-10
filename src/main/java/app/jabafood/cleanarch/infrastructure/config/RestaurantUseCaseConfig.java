@@ -1,8 +1,8 @@
 package app.jabafood.cleanarch.infrastructure.config;
 
-import app.jabafood.cleanarch.application.useCases.restaurant.*;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+import app.jabafood.cleanarch.domain.useCases.restaurant.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

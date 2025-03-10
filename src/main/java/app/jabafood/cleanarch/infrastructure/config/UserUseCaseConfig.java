@@ -1,7 +1,7 @@
 package app.jabafood.cleanarch.infrastructure.config;
 
-import app.jabafood.cleanarch.application.useCases.user.*;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
+import app.jabafood.cleanarch.domain.useCases.user.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
