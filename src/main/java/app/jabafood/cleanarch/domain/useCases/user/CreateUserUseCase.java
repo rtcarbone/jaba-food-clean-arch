@@ -15,6 +15,9 @@ public class CreateUserUseCase {
     private final IUserGateway userGateway;
 
     public User execute(User user) {
+
+        user.validate();
+
         EmailFormatValidation.validate(user.getEmail());
 
         Optional<User> existingEmail = userGateway.findByEmail(user.getEmail());
@@ -45,8 +48,6 @@ public class CreateUserUseCase {
                 user.getPassword(),
                 user.getUserType(),
                 user.getAddress());
-
-        newUser.validate();
 
         return userGateway.save(newUser);
     }
