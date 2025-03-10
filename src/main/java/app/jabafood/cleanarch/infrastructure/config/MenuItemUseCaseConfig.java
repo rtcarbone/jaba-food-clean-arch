@@ -2,6 +2,7 @@ package app.jabafood.cleanarch.infrastructure.config;
 
 import app.jabafood.cleanarch.application.useCases.menuItem.*;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
+import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class MenuItemUseCaseConfig {
 
     @Bean
-    public CreateMenuItemUseCase createMenuItemUseCase(IMenuItemGateway menuItemGateway) {
-        return new CreateMenuItemUseCase(menuItemGateway);
+    public CreateMenuItemUseCase createMenuItemUseCase(IMenuItemGateway menuItemGateway, IRestaurantGateway restaurantGateway) {
+        return new CreateMenuItemUseCase(menuItemGateway, restaurantGateway);
     }
 
     @Bean
@@ -29,8 +30,13 @@ public class MenuItemUseCaseConfig {
     }
 
     @Bean
-    public ListMenuItemsByRestaurantUseCase listMenuItemsByRestaurantUseCase(IMenuItemGateway menuItemGateway) {
-        return new ListMenuItemsByRestaurantUseCase(menuItemGateway);
+    public ListMenuItemUseCase listMenuItemUseCase(IMenuItemGateway menuItemGateway) {
+        return new ListMenuItemUseCase(menuItemGateway);
+    }
+
+    @Bean
+    public ListMenuItemsByRestaurantUseCase listMenuItemsByRestaurantUseCase(IMenuItemGateway menuItemGateway, IRestaurantGateway restaurantGateway) {
+        return new ListMenuItemsByRestaurantUseCase(menuItemGateway, restaurantGateway);
     }
 
 }

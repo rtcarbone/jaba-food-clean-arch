@@ -63,7 +63,9 @@ public class GlobalExceptionHandler {
             PasswordNotMatchException.class,
             UserMandatoryFieldException.class,
             RestaurantMandatoryFieldException.class,
-            RestaurantOwnerInvalidException.class
+            RestaurantOwnerInvalidException.class,
+            MenuItemMandatoryFieldException.class,
+            MenuItemRestaurantInvalidException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleBadRequest(RuntimeException ex, WebRequest request) {
         return buildErrorResponse(ex, request, HttpStatus.BAD_REQUEST);

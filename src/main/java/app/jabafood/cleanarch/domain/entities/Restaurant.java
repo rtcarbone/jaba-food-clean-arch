@@ -26,7 +26,6 @@ public class Restaurant {
     LocalTime openingTime;
     LocalTime closingTime;
     User owner;
-    List<MenuItem> menuItems;
 
     public Restaurant copyWith(String name, Address address, CuisineType cuisineType,
                                LocalTime openingTime, LocalTime closingTime, User owner) {
@@ -37,8 +36,7 @@ public class Restaurant {
                 cuisineType != null ? cuisineType : this.cuisineType,
                 openingTime != null ? openingTime : this.openingTime,
                 closingTime != null ? closingTime : this.closingTime,
-                owner != null ? owner : this.owner,
-                this.menuItems
+                owner != null ? owner : this.owner
         );
     }
 

@@ -42,4 +42,24 @@ public class MenuItem {
         );
     }
 
+    public void validate() {
+        if (name == null || name.trim().isEmpty()) {
+            throw new MenuItemMandatoryFieldException("name");
+        }
+        if (description == null || description.trim().isEmpty()) {
+            throw new MenuItemMandatoryFieldException("description");
+        }
+        if (price == null) {
+            throw new MenuItemMandatoryFieldException("price");
+        }
+        if (inRestaurantOnly == null) {
+            throw new MenuItemMandatoryFieldException("inRestaurantOnly");
+        }
+        if (imagePath == null || imagePath.trim().isEmpty()) {
+            throw new MenuItemMandatoryFieldException("imagePath");
+        }
+        if (restaurant == null) {
+            throw new MenuItemMandatoryFieldException("restaurant_id");
+        }
+    }
 }

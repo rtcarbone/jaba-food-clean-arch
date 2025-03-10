@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.application.useCases.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
+import app.jabafood.cleanarch.domain.exceptions.MenuItemNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import lombok.RequiredArgsConstructor;
 
@@ -12,6 +13,6 @@ public class GetMenuItemByIdUseCase {
 
     public MenuItem execute(UUID id) {
         return menuItemGateway.findById(id)
-                .orElseThrow(() -> new RuntimeException("Menu item not found"));
+                .orElseThrow(() -> new MenuItemNotFoundException(id));
     }
 }

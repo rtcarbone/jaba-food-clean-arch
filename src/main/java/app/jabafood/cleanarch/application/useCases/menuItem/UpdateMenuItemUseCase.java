@@ -2,6 +2,7 @@ package app.jabafood.cleanarch.application.useCases.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
+import app.jabafood.cleanarch.domain.exceptions.MenuItemNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
@@ -12,7 +13,7 @@ public class UpdateMenuItemUseCase {
 
     public MenuItem execute(UUID id, MenuItem updatedData) {
         MenuItem existingItem = menuItemGateway.findById(id)
-                .orElseThrow(() -> new RuntimeException("Menu item not found"));
+                .orElseThrow(() -> new MenuItemNotFoundException(id));
 
         MenuItem updatedItem = existingItem.copyWith(
                 updatedData.getName(),
@@ -22,6 +23,8 @@ public class UpdateMenuItemUseCase {
                 updatedData.getImagePath(),
                 existingItem.getRestaurant()
         );
+
+        updatedItem.validate();
 
         return menuItemGateway.save(updatedItem);
     }

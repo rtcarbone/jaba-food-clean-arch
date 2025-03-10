@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CuisineType {
-    PIZZERIA("Pizzeria"),
-    BURGER("Burguer"),
-    ITALIAN("Italian"),
-    JAPANESE("Japanese");
+    PIZZERIA("Pizzaria"),
+    BURGER("Hamburgueria"),
+    ITALIAN("Italiana"),
+    JAPANESE("Japonesa");
 
     private final String description;
 }

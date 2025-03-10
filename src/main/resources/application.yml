@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/jaba}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/jaba}
     username: ${DATABASE_USER:user}
     password: ${DATABASE_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
@@ -14,7 +14,7 @@ spring:
         id:
           new_generator_mappings: true
   flyway:
-    url: ${FLYWAY_DATABASE_URL:jdbc:postgresql://postgres:5432/jaba}
+    url: ${FLYWAY_DATABASE_URL:jdbc:postgresql://localhost:5432/jaba}
     user: ${FLYWAY_DATABASE_USER:user}
     password: ${FLYWAY_DATABASE_PASSWORD:password}
     enabled: true

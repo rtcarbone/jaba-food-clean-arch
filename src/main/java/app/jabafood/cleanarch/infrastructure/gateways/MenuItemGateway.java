@@ -30,6 +30,14 @@ public class MenuItemGateway implements IMenuItemGateway {
     }
 
     @Override
+    public List<MenuItem> findAll() {
+        return jpaRepository.findAll()
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<MenuItem> findByRestaurantId(UUID restaurantId) {
         return jpaRepository.findByRestaurantId(restaurantId)
                 .stream()
