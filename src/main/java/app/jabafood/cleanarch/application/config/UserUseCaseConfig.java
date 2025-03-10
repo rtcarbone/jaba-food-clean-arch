@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.infrastructure.config;
+package app.jabafood.cleanarch.application.config;
 
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.useCases.user.*;

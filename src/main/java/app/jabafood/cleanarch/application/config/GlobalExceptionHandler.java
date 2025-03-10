@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.application.controllers.config;
+package app.jabafood.cleanarch.application.config;
 
 import app.jabafood.cleanarch.application.dto.ErrorResponseDTO;
 import app.jabafood.cleanarch.domain.exceptions.*;
