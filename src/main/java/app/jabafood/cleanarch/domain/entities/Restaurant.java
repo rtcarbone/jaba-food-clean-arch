@@ -62,7 +62,7 @@ public class Restaurant {
         if (openingTime.isAfter(closingTime) || openingTime.equals(closingTime)) {
             throw new InvalidClosingTimeException();
         }
-        if (owner == null) {
+        if (owner == null || owner.getId() == null) {
             throw new RestaurantMandatoryFieldException("owner");
         }
     }

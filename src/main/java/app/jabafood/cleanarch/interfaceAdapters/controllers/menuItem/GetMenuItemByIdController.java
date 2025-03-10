@@ -1,7 +1,7 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers.menuItem;
 
 import app.jabafood.cleanarch.application.useCases.menuItem.GetMenuItemByIdUseCase;
-import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemRequestDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class GetMenuItemByIdController {
     private final MenuItemMapper menuItemMapper;
 
     @GetMapping
-    public ResponseEntity<MenuItemRequestDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<MenuItemResponseDTO> findById(@PathVariable UUID id) {
         var menuItem = getMenuItemByIdUseCase.execute(id);
         return ResponseEntity.ok(menuItemMapper.toDTO(menuItem));
     }

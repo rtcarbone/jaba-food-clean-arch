@@ -1,5 +1,6 @@
 package app.jabafood.cleanarch.domain.entities;
 
+import app.jabafood.cleanarch.domain.exceptions.MenuItemMandatoryFieldException;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class MenuItem {
     String name;
     String description;
     BigDecimal price;
-    boolean inRestaurantOnly;
+    Boolean inRestaurantOnly;
     String imagePath;
     Restaurant restaurant;
 
@@ -43,10 +44,12 @@ public class MenuItem {
     }
 
     public void validate() {
-        if (name == null || name.trim().isEmpty()) {
+        if (name == null || name.trim()
+                .isEmpty()) {
             throw new MenuItemMandatoryFieldException("name");
         }
-        if (description == null || description.trim().isEmpty()) {
+        if (description == null || description.trim()
+                .isEmpty()) {
             throw new MenuItemMandatoryFieldException("description");
         }
         if (price == null) {
@@ -55,11 +58,12 @@ public class MenuItem {
         if (inRestaurantOnly == null) {
             throw new MenuItemMandatoryFieldException("inRestaurantOnly");
         }
-        if (imagePath == null || imagePath.trim().isEmpty()) {
+        if (imagePath == null || imagePath.trim()
+                .isEmpty()) {
             throw new MenuItemMandatoryFieldException("imagePath");
         }
-        if (restaurant == null) {
-            throw new MenuItemMandatoryFieldException("restaurant_id");
+        if (restaurant == null || restaurant.getId() == null) {
+            throw new MenuItemMandatoryFieldException("restaurant");
         }
     }
 }

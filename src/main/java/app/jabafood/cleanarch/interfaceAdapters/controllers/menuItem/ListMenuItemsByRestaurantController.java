@@ -1,7 +1,7 @@
 package app.jabafood.cleanarch.interfaceAdapters.controllers.menuItem;
 
 import app.jabafood.cleanarch.application.useCases.menuItem.ListMenuItemsByRestaurantUseCase;
-import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemRequestDTO;
+import app.jabafood.cleanarch.interfaceAdapters.dto.MenuItemResponseDTO;
 import app.jabafood.cleanarch.interfaceAdapters.mappers.MenuItemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class ListMenuItemsByRestaurantController {
     private final MenuItemMapper menuItemMapper;
 
     @GetMapping
-    public ResponseEntity<List<MenuItemRequestDTO>> findByRestaurant(@PathVariable UUID restaurantId) {
+    public ResponseEntity<List<MenuItemResponseDTO>> findByRestaurant(@PathVariable UUID restaurantId) {
         return ResponseEntity.ok(menuItemMapper.toDTOList(listMenuItemsByRestaurantUseCase.execute(restaurantId)));
     }
 }

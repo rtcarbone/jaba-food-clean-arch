@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record MenuItemRequestDTO(
-        UUID id,
-
         @NotBlank(message = "Item name cannot be empty")
         String name,
 

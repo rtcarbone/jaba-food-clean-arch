@@ -19,7 +19,7 @@ public class UpdateMenuItemUseCase {
                 updatedData.getName(),
                 updatedData.getDescription(),
                 updatedData.getPrice(),
-                updatedData.isInRestaurantOnly(),
+                updatedData.getInRestaurantOnly(),
                 updatedData.getImagePath(),
                 existingItem.getRestaurant()
         );
