@@ -10,7 +10,8 @@ services:
       dockerfile: Dockerfile
     container_name: jaba_app
     ports:
-      - "8080:8080"
+      - "8080:8080"   # Porta da aplicação
+      - "5005:5005"   # Porta para o debugger
     depends_on:
       postgres:
         condition: service_healthy
@@ -22,6 +23,7 @@ services:
       FLYWAY_URL: jdbc:postgresql://postgres:5432/jaba
       FLYWAY_USER: user
       FLYWAY_PASSWORD: password
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     networks:
       - jaba_network
 
