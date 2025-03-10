@@ -1,7 +1,7 @@
 package app.jabafood.cleanarch.application.controllers.config;
 
-import app.jabafood.cleanarch.domain.exceptions.*;
 import app.jabafood.cleanarch.application.dto.ErrorResponseDTO;
+import app.jabafood.cleanarch.domain.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
                 httpMethod,
                 requestPath,
                 LocalDateTime.now()
-                        .format(formatter), // Data mais legível
+                        .format(formatter),
                 status.value()
         );
         return new ResponseEntity<>(errorResponse, status);
