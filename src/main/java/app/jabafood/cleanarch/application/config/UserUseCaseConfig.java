@@ -1,5 +1,6 @@
 package app.jabafood.cleanarch.application.config;
 
+import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.useCases.user.*;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,8 @@ public class UserUseCaseConfig {
     }
 
     @Bean
-    public UpdateUserUseCase updateUserUseCase(IUserGateway userGateway) {
-        return new UpdateUserUseCase(userGateway);
+    public UpdateUserUseCase updateUserUseCase(IUserGateway userGateway, IRestaurantGateway restaurantGateway) {
+        return new UpdateUserUseCase(userGateway, restaurantGateway);
     }
 
     @Bean
