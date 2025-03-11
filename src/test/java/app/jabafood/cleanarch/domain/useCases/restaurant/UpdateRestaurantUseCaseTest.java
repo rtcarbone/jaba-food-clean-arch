@@ -32,23 +32,23 @@ class UpdateRestaurantUseCaseTest {
     void setup() {
         restaurantGateway = mock(IRestaurantGateway.class);
         userGateway = mock(IUserGateway.class);
-        updateRestaurantUseCase = new UpdateRestaurantUseCase(restaurantGateway, userGateway);
+        updateRestaurantUseCase = new UpdateRestaurantUseCase(restaurantGateway);
     }
 
     @Test
     void shouldUpdateRestaurantSuccessfully() {
         // Given
         UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null);
+        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
 
         UUID restaurantId = UUID.randomUUID();
         Restaurant existingRestaurant = new Restaurant(
                 restaurantId, "Old Name", null, CuisineType.PIZZERIA,
-                LocalTime.of(10, 0), LocalTime.of(22, 0), ownerId, null
+                LocalTime.of(10, 0), LocalTime.of(22, 0), owner
         );
 
         Restaurant updatedData = new Restaurant(
-                restaurantId, "New Name", null, CuisineType.ITALIANA,
+                restaurantId, "New Name", null, CuisineType.ITALIAN,
                 LocalTime.of(9, 0), LocalTime.of(23, 0), ownerId, null
         );
 
