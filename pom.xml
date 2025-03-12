@@ -213,7 +213,6 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <haltOnFailure>false</haltOnFailure>
                             <rules>
                                 <rule>
                                     <element>CLASS</element>
@@ -224,6 +223,10 @@
                                             <minimum>0.80</minimum> <!-- 🔹 Exige pelo menos 80% de cobertura -->
                                         </limit>
                                     </limits>
+                                    <includes>
+                                        <include>app.jabafood.cleanarch.domain.entities.*</include>
+                                        <include>app.jabafood.cleanarch.domain.useCases.*</include>
+                                    </includes>
                                 </rule>
                             </rules>
                         </configuration>

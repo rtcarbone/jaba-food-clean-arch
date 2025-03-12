@@ -5,6 +5,7 @@ import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
+import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ListRestaurantsByOwnerUseCaseTest {
@@ -113,4 +115,20 @@ class ListRestaurantsByOwnerUseCaseTest {
         verify(userGateway, times(1)).findById(ownerId);
         verify(restaurantGateway, times(1)).findByOwnerId(ownerId);
     }
+
+    @Test
+    void shouldThrowUserNotFoundExceptionWhenOwnerDoesNotExist() {
+        // Arrange - Configura o Mock para retornar Optional vazio
+        when(userGateway.findById(ownerId)).thenReturn(Optional.empty());
+
+        // Act / Assert - Verifica se a exceção é lançada
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class,
+                                                       () -> listRestaurantsByOwnerUseCase.execute(ownerId));
+
+        assertThat(exception.getMessage()).isEqualTo("User with ID '" + ownerId + "' not found.");
+
+        // Verifica que o método de buscar restaurantes **não foi chamado**
+        verify(restaurantGateway, never()).findByOwnerId(any(UUID.class));
+    }
+
 }
