@@ -64,6 +64,7 @@ services:
       SPRING_FLYWAY_ENABLED: true
     volumes:
       - maven_cache:/root/.m2
+      - ./jacoco-reports:/app/jacoco
     entrypoint: [ "mvn", "clean", "verify" ]
     networks:
       - jaba_network

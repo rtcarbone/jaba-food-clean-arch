@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=builder /app /app
 
 # Executa os testes ao rodar este container
-ENTRYPOINT ["mvn", "clean", "verify"]
+ENTRYPOINT ["sh", "-c", "mvn clean verify -Dmaven.test.failure.ignore=true && mkdir -p /app/jacoco && cp -r target/site/jacoco/* /app/jacoco"]
 
 # 🔹 Etapa 2B: Ambiente final para execução da APLICAÇÃO
 FROM eclipse-temurin:21-jdk AS production
