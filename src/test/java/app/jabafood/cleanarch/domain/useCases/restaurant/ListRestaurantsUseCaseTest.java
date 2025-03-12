@@ -1,12 +1,15 @@
 package app.jabafood.cleanarch.domain.useCases.restaurant;
 
+import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
+import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -35,8 +38,8 @@ class ListRestaurantsUseCaseTest {
         User owner1 = new User(UUID.randomUUID(), "John Doe 1", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
         User owner2 = new User(UUID.randomUUID(), "John Doe 2", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
 
-        Restaurant restaurant1 = new Restaurant(restaurant1Id, "Pizza Express", null, null, null, null, owner1);
-        Restaurant restaurant2 = new Restaurant(restaurant2Id, "Burger King", null, null, null, null, owner2);
+        Restaurant restaurant1 = new Restaurant(restaurant1Id, "Pizza Express", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(11, 0), LocalTime.of(23, 0), owner1);
+        Restaurant restaurant2 = new Restaurant(restaurant2Id, "Burger King", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(11, 0), LocalTime.of(23, 0), owner2);
 
         List<Restaurant> restaurants = List.of(restaurant1, restaurant2);
 

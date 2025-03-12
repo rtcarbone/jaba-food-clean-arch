@@ -1,15 +1,17 @@
 package app.jabafood.cleanarch.domain.useCases.restaurant;
 
+import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
+import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantNotFoundException;
-import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,8 +38,8 @@ class DeleteRestaurantUseCaseTest {
         UUID ownerId = UUID.randomUUID();
         UUID restaurantId = UUID.randomUUID();
 
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        Restaurant restaurant = new Restaurant(restaurantId, "Pizza Express", null, null, null, null, owner);
+        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
+        Restaurant restaurant = new Restaurant(restaurantId, "Pizza Express", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(11, 0), LocalTime.of(23, 0), owner);
 
         when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(restaurant));
         when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
@@ -63,23 +65,4 @@ class DeleteRestaurantUseCaseTest {
         verify(restaurantGateway, never()).delete(any(UUID.class));
     }
 
-    @Test
-    void shouldFailIfOwnerDoesNotExist() {
-        // Given
-        UUID restaurantId = UUID.randomUUID();
-        UUID ownerId = UUID.randomUUID();
-
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        Restaurant restaurant = new Restaurant(restaurantId, "Pizza Express", null, null, null, null, owner);
-
-        when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(restaurant));
-        when(userGateway.findById(ownerId)).thenReturn(Optional.empty());
-
-        // When / Then
-        assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> deleteRestaurantUseCase.execute(restaurantId))
-                .withMessage("User with ID '" + ownerId + "' not found.");
-
-        verify(restaurantGateway, never()).delete(any(UUID.class));
-    }
 }

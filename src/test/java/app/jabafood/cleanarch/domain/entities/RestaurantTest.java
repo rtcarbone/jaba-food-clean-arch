@@ -1,6 +1,7 @@
 package app.jabafood.cleanarch.domain.entities;
 
 import app.jabafood.cleanarch.domain.enums.CuisineType;
+import app.jabafood.cleanarch.domain.exceptions.InvalidClosingTimeException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 class RestaurantTest {
 
@@ -48,12 +50,13 @@ class RestaurantTest {
         UUID ownerId = UUID.randomUUID();
         User owner = new User(ownerId, null, null, null, null, null, null, null);
 
-        // When / Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                new Restaurant(id, name, null, cuisineType, openingTime, closingTime, owner)
-        );
+        // Criando o restaurante sem validação no construtor
+        Restaurant restaurant = new Restaurant(id, name, mock(Address.class), cuisineType, openingTime, closingTime, owner);
 
-        assertThat(exception.getMessage()).isEqualTo("Closing time must be after opening time.");
+        // When / Then
+        InvalidClosingTimeException exception = assertThrows(InvalidClosingTimeException.class, restaurant::validate);
+
+        assertThat(exception.getMessage()).isEqualTo("Closing time must be later than opening time.");
     }
 
     @Test

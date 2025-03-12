@@ -1,13 +1,16 @@
 package app.jabafood.cleanarch.domain.useCases.restaurant;
 
+import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
+import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,7 +34,7 @@ class GetRestaurantByIdUseCaseTest {
         // Given
         User owner = new User(UUID.randomUUID(), "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
         UUID restaurantId = UUID.randomUUID();
-        Restaurant restaurant = new Restaurant(restaurantId, "Pizza Express", null, null, null, null, owner);
+        Restaurant restaurant = new Restaurant(restaurantId, "Pizza Express", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(11, 0), LocalTime.of(23, 0), owner);
 
         when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(restaurant));
 

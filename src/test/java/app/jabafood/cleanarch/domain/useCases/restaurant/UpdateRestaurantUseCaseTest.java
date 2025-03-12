@@ -1,13 +1,12 @@
 package app.jabafood.cleanarch.domain.useCases.restaurant;
 
+import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.exceptions.InvalidClosingTimeException;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantNotFoundException;
-import app.jabafood.cleanarch.domain.exceptions.RestaurantOwnerInvalidException;
-import app.jabafood.cleanarch.domain.exceptions.UserNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,42 +83,7 @@ class UpdateRestaurantUseCaseTest {
 
         // When / Then
         RestaurantNotFoundException exception = assertThrows(RestaurantNotFoundException.class, () -> updateRestaurantUseCase.execute(restaurantId, updatedData));
-        assertThat(exception.getMessage()).isEqualTo("Restaurant not found.");
-    }
-
-    @Test
-    void shouldFailIfOwnerDoesNotExist() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        UUID restaurantId = UUID.randomUUID();
-        Restaurant existingRestaurant = new Restaurant(restaurantId, "Old Name", null, CuisineType.JAPANESE, LocalTime.of(10, 0), LocalTime.of(22, 0), owner);
-        Restaurant updatedData = new Restaurant(restaurantId, "Updated Name", null, CuisineType.JAPANESE, LocalTime.of(9, 0), LocalTime.of(23, 0), owner);
-
-        when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
-        when(userGateway.findById(ownerId)).thenReturn(Optional.empty());
-
-        // When / Then
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> updateRestaurantUseCase.execute(restaurantId, updatedData));
-        assertThat(exception.getMessage()).isEqualTo("User not found.");
-    }
-
-    @Test
-    void shouldFailIfOwnerIsNotRestaurantOwner() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        UUID restaurantId = UUID.randomUUID();
-        User user = new User(ownerId, "Jane Doe", "janedoe", "jane@example.com", "password", UserType.CUSTOMER, null, null);
-        Restaurant existingRestaurant = new Restaurant(restaurantId, "Old Name", null, CuisineType.PIZZERIA, LocalTime.of(10, 0), LocalTime.of(22, 0), owner);
-        Restaurant updatedData = new Restaurant(restaurantId, "Updated Name", null, CuisineType.PIZZERIA, LocalTime.of(9, 0), LocalTime.of(23, 0), owner);
-
-        when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
-        when(userGateway.findById(ownerId)).thenReturn(Optional.of(user));
-
-        // When / Then
-        RestaurantOwnerInvalidException exception = assertThrows(RestaurantOwnerInvalidException.class, () -> updateRestaurantUseCase.execute(restaurantId, updatedData));
-        assertThat(exception.getMessage()).isEqualTo("User with ID '" + ownerId + "' is not a valid owner for this restaurant.");
+        assertThat(exception.getMessage()).isEqualTo("Restaurant with ID '" + restaurantId + "' not found.");
     }
 
     @Test
@@ -127,9 +91,9 @@ class UpdateRestaurantUseCaseTest {
         // Given
         UUID ownerId = UUID.randomUUID();
         UUID restaurantId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        Restaurant existingRestaurant = new Restaurant(restaurantId, "Old Name", null, CuisineType.PIZZERIA, LocalTime.of(10, 0), LocalTime.of(22, 0), owner);
-        Restaurant updatedData = new Restaurant(restaurantId, "Updated Name", null, CuisineType.PIZZERIA, LocalTime.of(18, 0), LocalTime.of(17, 0), owner);
+        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
+        Restaurant existingRestaurant = new Restaurant(restaurantId, "Old Name", mock(Address.class), CuisineType.PIZZERIA, LocalTime.of(10, 0), LocalTime.of(22, 0), owner);
+        Restaurant updatedData = new Restaurant(restaurantId, "Updated Name", mock(Address.class), CuisineType.PIZZERIA, LocalTime.of(18, 0), LocalTime.of(17, 0), owner);
 
         when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
         when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));

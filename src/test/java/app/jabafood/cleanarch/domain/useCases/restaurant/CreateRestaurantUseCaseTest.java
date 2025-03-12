@@ -1,5 +1,6 @@
 package app.jabafood.cleanarch.domain.useCases.restaurant;
 
+import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
@@ -41,7 +42,7 @@ class CreateRestaurantUseCaseTest {
 
         UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(
-                restaurantId, "Pizza Express", null, CuisineType.PIZZERIA,
+                restaurantId, "Pizza Express", mock(Address.class), CuisineType.PIZZERIA,
                 LocalTime.of(10, 0), LocalTime.of(23, 0), owner
         );
 
@@ -65,13 +66,14 @@ class CreateRestaurantUseCaseTest {
         // Given
         UUID ownerId = UUID.randomUUID();
         User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Sushi Place", null, CuisineType.JAPANESE, LocalTime.of(12, 0), LocalTime.of(22, 0), owner);
+
+        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Sushi Place", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(12, 0), LocalTime.of(22, 0), owner);
 
         when(userGateway.findById(ownerId)).thenReturn(Optional.empty());
 
         // When / Then
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> createRestaurantUseCase.execute(restaurant));
-        assertThat(exception.getMessage()).isEqualTo("User not found: " + ownerId);
+        assertThat(exception.getMessage()).isEqualTo("User with ID '" + ownerId + "' not found.");
     }
 
     @Test
@@ -79,7 +81,8 @@ class CreateRestaurantUseCaseTest {
         // Given
         UUID ownerId = UUID.randomUUID();
         User owner = new User(ownerId, "Jane Doe", "janedoe", "jane@example.com", "password", UserType.CUSTOMER, null, null);
-        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Burger House", null, CuisineType.BURGER, LocalTime.of(11, 0), LocalTime.of(23, 0), owner);
+
+        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Burger House", mock(Address.class), CuisineType.BURGER, LocalTime.of(11, 0), LocalTime.of(23, 0), owner);
 
         when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
 
