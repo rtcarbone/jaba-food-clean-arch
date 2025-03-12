@@ -38,16 +38,16 @@ class UpdateRestaurantUseCaseTest {
     void shouldUpdateRestaurantSuccessfully() {
         // Given
         UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
+        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
 
         UUID restaurantId = UUID.randomUUID();
         Restaurant existingRestaurant = new Restaurant(
-                restaurantId, "Old Name", null, CuisineType.PIZZERIA,
+                restaurantId, "Old Name", mock(Address.class), CuisineType.PIZZERIA,
                 LocalTime.of(10, 0), LocalTime.of(22, 0), owner
         );
 
         Restaurant updatedData = new Restaurant(
-                restaurantId, "New Name", null, CuisineType.ITALIAN,
+                restaurantId, "New Name", mock(Address.class), CuisineType.ITALIAN,
                 LocalTime.of(9, 0), LocalTime.of(23, 0), owner
         );
 
@@ -72,10 +72,10 @@ class UpdateRestaurantUseCaseTest {
     void shouldFailIfRestaurantDoesNotExist() {
         // Given
         UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
+        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
         UUID restaurantId = UUID.randomUUID();
         Restaurant updatedData = new Restaurant(
-                restaurantId, "Updated Name", null, CuisineType.BURGER,
+                restaurantId, "Updated Name", mock(Address.class), CuisineType.BURGER,
                 LocalTime.of(9, 0), LocalTime.of(23, 0), owner
         );
 

@@ -27,7 +27,4 @@ public class AddressEntity {
     private String country;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    @OneToOne(mappedBy = "address")
-    private UserEntity user;
 }

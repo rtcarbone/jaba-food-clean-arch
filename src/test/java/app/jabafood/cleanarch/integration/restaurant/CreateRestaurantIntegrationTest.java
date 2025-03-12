@@ -28,6 +28,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
 class CreateRestaurantIntegrationTest {
 
     @Autowired
@@ -71,12 +73,12 @@ class CreateRestaurantIntegrationTest {
 
     @BeforeEach
     void setup() {
+        url = "/api/v1/restaurants/create";
+
         objectMapper.registerModule(new JavaTimeModule());
 
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
-
-        url = "/api/v1/restaurants/create";
     }
 
     @Test
@@ -95,7 +97,6 @@ class CreateRestaurantIntegrationTest {
 
         String jsonResponse = result.getResponse()
                 .getContentAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
         String ownerId = jsonNode.get("id")
                 .asText();
@@ -120,8 +121,8 @@ class CreateRestaurantIntegrationTest {
         User owner = new User(
                 null,
                 "John Doe",
-                "johndoe",
                 "john@example.com",
+                "johndoe",
                 "password",
                 UserType.RESTAURANT_OWNER,
                 null,
@@ -130,7 +131,7 @@ class CreateRestaurantIntegrationTest {
 
         User createdOwner = createUserUseCase.execute(owner);
 
-        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Sushi Place", new Address(UUID.randomUUID(), "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil"), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), createdOwner);
+        Restaurant restaurant = new Restaurant(null, "Sushi Place", new Address(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil"), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), createdOwner);
 
         // Usa o use case diretamente
         Restaurant createdRestaurant = createRestaurantUseCase.execute(restaurant);

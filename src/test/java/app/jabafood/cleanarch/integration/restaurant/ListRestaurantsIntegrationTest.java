@@ -2,10 +2,14 @@ package app.jabafood.cleanarch.integration.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
+import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.useCases.restaurant.ListRestaurantsUseCase;
+import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.RestaurantEntity;
+import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
+import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
 class ListRestaurantsIntegrationTest {
 
     @Autowired
@@ -38,6 +43,9 @@ class ListRestaurantsIntegrationTest {
 
     @Autowired
     private RestaurantJpaRepository restaurantJpaRepository;
+
+    @Autowired
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
     private ListRestaurantsUseCase listRestaurantsUseCase;
@@ -52,24 +60,31 @@ class ListRestaurantsIntegrationTest {
 
     @BeforeEach
     void setup() {
-        restaurantJpaRepository.deleteAll(); // Limpa o banco antes de cada teste
+        url = "/api/v1/restaurants/list";
 
-        url = "/api/v1/restaurants";
+        restaurantJpaRepository.deleteAll();
+        userJpaRepository.deleteAll();
 
-        // Criando restaurantes para teste
+        // Criando um dono de restaurante
+        UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
+        userJpaRepository.save(owner);
+
+        // Criando restaurantes para esse dono
         RestaurantEntity restaurant1 = new RestaurantEntity();
-        restaurant1.setId(UUID.randomUUID());
         restaurant1.setName("Pizza Express");
+        restaurant1.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurant1.setCuisineType(CuisineType.PIZZERIA);
         restaurant1.setOpeningTime(LocalTime.of(10, 0));
         restaurant1.setClosingTime(LocalTime.of(22, 0));
+        restaurant1.setOwner(owner);
 
         RestaurantEntity restaurant2 = new RestaurantEntity();
-        restaurant2.setId(UUID.randomUUID());
         restaurant2.setName("Burger King");
+        restaurant2.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurant2.setCuisineType(CuisineType.BURGER);
         restaurant2.setOpeningTime(LocalTime.of(11, 0));
         restaurant2.setClosingTime(LocalTime.of(23, 0));
+        restaurant2.setOwner(owner);
 
         restaurantJpaRepository.saveAll(List.of(restaurant1, restaurant2));
     }

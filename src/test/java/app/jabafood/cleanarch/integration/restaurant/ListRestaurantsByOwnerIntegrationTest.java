@@ -2,8 +2,10 @@ package app.jabafood.cleanarch.integration.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
+import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.useCases.restaurant.ListRestaurantsByOwnerUseCase;
+import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.RestaurantEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -33,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
 class ListRestaurantsByOwnerIntegrationTest {
 
     @Autowired
@@ -59,33 +63,28 @@ class ListRestaurantsByOwnerIntegrationTest {
 
     @BeforeEach
     void setup() {
-        restaurantJpaRepository.deleteAll(); // Limpa o banco antes de cada teste
+        url = "/api/v1/restaurants/list/owner/";
+
+        restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        url = "api/v1/restaurants/list/owner/";
-
-        // Criando um usuário dono de restaurante
-        UserEntity owner = new UserEntity();
-        owner.setId(UUID.randomUUID());
-        owner.setName("John Doe");
-        owner.setEmail("john.doe@example.com");
-        owner.setLogin("johndoe");
-        owner.setPassword("password123");
+        // Criando um dono de restaurante
+        UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
-        this.ownerId = owner.getId();
+        ownerId = owner.getId();
 
         // Criando restaurantes para esse dono
         RestaurantEntity restaurant1 = new RestaurantEntity();
-        restaurant1.setId(UUID.randomUUID());
         restaurant1.setName("Pizza Express");
+        restaurant1.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurant1.setCuisineType(CuisineType.PIZZERIA);
         restaurant1.setOpeningTime(LocalTime.of(10, 0));
         restaurant1.setClosingTime(LocalTime.of(22, 0));
         restaurant1.setOwner(owner);
 
         RestaurantEntity restaurant2 = new RestaurantEntity();
-        restaurant2.setId(UUID.randomUUID());
         restaurant2.setName("Burger King");
+        restaurant2.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurant2.setCuisineType(CuisineType.BURGER);
         restaurant2.setOpeningTime(LocalTime.of(11, 0));
         restaurant2.setClosingTime(LocalTime.of(23, 0));
@@ -122,12 +121,7 @@ class ListRestaurantsByOwnerIntegrationTest {
     @Test
     void shouldReturnEmptyListWhenOwnerHasNoRestaurants() throws Exception {
         // Criando um novo dono sem restaurantes
-        UserEntity newOwner = new UserEntity();
-        newOwner.setId(UUID.randomUUID());
-        newOwner.setName("Jane Doe");
-        newOwner.setEmail("jane.doe@example.com");
-        newOwner.setLogin("janedoe");
-        newOwner.setPassword("password123");
+        UserEntity newOwner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(newOwner);
 
         // Realiza a requisição GET para um dono sem restaurantes

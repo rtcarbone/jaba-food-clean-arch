@@ -65,7 +65,8 @@ public class GlobalExceptionHandler {
             RestaurantMandatoryFieldException.class,
             RestaurantOwnerInvalidException.class,
             MenuItemMandatoryFieldException.class,
-            MenuItemRestaurantInvalidException.class
+            MenuItemRestaurantInvalidException.class,
+            InvalidClosingTimeException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleBadRequest(RuntimeException ex, WebRequest request) {
         return buildErrorResponse(ex, request, HttpStatus.BAD_REQUEST);

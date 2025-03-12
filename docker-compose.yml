@@ -51,6 +51,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: test-runner
     container_name: jaba_tests
     depends_on:
       postgres_test:
@@ -61,6 +62,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: test_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_FLYWAY_ENABLED: true
+    volumes:
+      - maven_cache:/root/.m2
     entrypoint: [ "mvn", "clean", "verify" ]
     networks:
       - jaba_network
@@ -71,6 +74,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: production
     container_name: jaba_app
     ports:
       - "8080:8080"
@@ -113,3 +117,4 @@ volumes:
   postgres_data:
   postgres_test_data:
   pgadmin_data:
+  maven_cache:

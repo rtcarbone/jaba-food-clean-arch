@@ -1,10 +1,16 @@
 package app.jabafood.cleanarch.integration.restaurant;
 
 import app.jabafood.cleanarch.domain.entities.Restaurant;
+import app.jabafood.cleanarch.domain.enums.CuisineType;
+import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
+import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.useCases.restaurant.GetRestaurantByIdUseCase;
+import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.RestaurantEntity;
+import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
+import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +22,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
 public class GetRestaurantByIdIntegrationTest {
 
     @Autowired
@@ -37,24 +46,43 @@ public class GetRestaurantByIdIntegrationTest {
     private RestaurantJpaRepository restaurantJpaRepository;
 
     @Autowired
+    private UserJpaRepository userJpaRepository;
+
+    @Autowired
     private GetRestaurantByIdUseCase getRestaurantByIdUseCase;
 
     @Autowired
     private IRestaurantGateway restaurantGateway;
 
     @Autowired
+    private IUserGateway userGateway;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    private String url;
 
     private UUID restaurantId;
 
     @BeforeEach
     void setup() {
-        restaurantJpaRepository.deleteAll(); // Limpa o banco antes de cada teste
+        url = "/api/v1/restaurants/{id}";
+
+        restaurantJpaRepository.deleteAll();
+        userJpaRepository.deleteAll();
+
+        // Criando um dono de restaurante
+        UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
+        userJpaRepository.save(owner);
 
         // Criando um restaurante para teste
         RestaurantEntity restaurantEntity = new RestaurantEntity();
-        restaurantEntity.setId(UUID.randomUUID());
+        restaurantEntity.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurantEntity.setName("Pizza Express");
+        restaurantEntity.setOpeningTime(LocalTime.of(10, 0));
+        restaurantEntity.setClosingTime(LocalTime.of(23, 0));
+        restaurantEntity.setCuisineType(CuisineType.PIZZERIA);
+        restaurantEntity.setOwner(owner);
         restaurantJpaRepository.save(restaurantEntity);
 
         restaurantId = restaurantEntity.getId();
@@ -63,7 +91,7 @@ public class GetRestaurantByIdIntegrationTest {
     @Test
     void shouldRetrieveRestaurantByIdThroughController() throws Exception {
         // Realiza a requisição GET para o endpoint da API
-        mockMvc.perform(get("/api/v1/restaurants/{id}", restaurantId)
+        mockMvc.perform(get(url, restaurantId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(restaurantId.toString()))
@@ -86,7 +114,7 @@ public class GetRestaurantByIdIntegrationTest {
         UUID nonExistentId = UUID.randomUUID();
 
         // Realiza a requisição GET para um ID inexistente
-        mockMvc.perform(get("/api/v1/restaurants/{id}", nonExistentId)
+        mockMvc.perform(get(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }

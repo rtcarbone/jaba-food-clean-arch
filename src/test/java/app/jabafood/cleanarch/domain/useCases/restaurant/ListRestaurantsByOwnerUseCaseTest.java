@@ -6,28 +6,23 @@ import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
+import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class ListRestaurantsByOwnerUseCaseTest {
 
-    @Mock
-    private IRestaurantGateway restaurantGateway;
-
-    @InjectMocks
     private ListRestaurantsByOwnerUseCase listRestaurantsByOwnerUseCase;
+    private IRestaurantGateway restaurantGateway;
+    private IUserGateway userGateway;
 
     private UUID ownerId;
     private Restaurant restaurant1;
@@ -35,6 +30,10 @@ class ListRestaurantsByOwnerUseCaseTest {
 
     @BeforeEach
     void setup() {
+        restaurantGateway = mock(IRestaurantGateway.class);
+        userGateway = mock(IUserGateway.class);
+        listRestaurantsByOwnerUseCase = new ListRestaurantsByOwnerUseCase(restaurantGateway, userGateway);
+
         ownerId = UUID.randomUUID();
         User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
 
@@ -62,6 +61,9 @@ class ListRestaurantsByOwnerUseCaseTest {
     @Test
     void shouldReturnRestaurantsByOwnerSuccessfully() {
         // Arrange - Configura o comportamento do Mock
+        User owner = new User(ownerId, "John Doe", "john@example.com", "johndoe", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
+
+        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
         when(restaurantGateway.findByOwnerId(ownerId)).thenReturn(List.of(restaurant1, restaurant2));
 
         // Act - Executa o caso de uso
@@ -81,6 +83,9 @@ class ListRestaurantsByOwnerUseCaseTest {
     @Test
     void shouldReturnEmptyListWhenOwnerHasNoRestaurants() {
         // Arrange - Configura o Mock para retornar uma lista vazia
+        User owner = new User(ownerId, "John Doe", "john@example.com", "johndoe", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
+
+        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
         when(restaurantGateway.findByOwnerId(ownerId)).thenReturn(List.of());
 
         // Act - Executa o caso de uso
@@ -95,13 +100,17 @@ class ListRestaurantsByOwnerUseCaseTest {
 
     @Test
     void shouldCallGatewayWithCorrectOwnerId() {
-        // Arrange
-        when(restaurantGateway.findByOwnerId(any(UUID.class))).thenReturn(List.of(restaurant1));
+        // Arrange - Criar um usuário e simular que ele existe no userGateway
+        User owner = new User(ownerId, "John Doe", "john@example.com", "johndoe", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
 
-        // Act
+        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
+        when(restaurantGateway.findByOwnerId(ownerId)).thenReturn(List.of(restaurant1));
+
+        // Act - Executa o caso de uso
         listRestaurantsByOwnerUseCase.execute(ownerId);
 
-        // Assert - Verifica se o método foi chamado com o UUID correto
+        // Assert - Verifica se os métodos foram chamados corretamente
+        verify(userGateway, times(1)).findById(ownerId);
         verify(restaurantGateway, times(1)).findByOwnerId(ownerId);
     }
 }
