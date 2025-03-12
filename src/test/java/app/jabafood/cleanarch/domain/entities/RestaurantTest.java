@@ -117,10 +117,11 @@ class RestaurantTest {
 
     @Test
     void shouldCallAddressValidation() {
-        // Given
+        //
+        User owner = new User(UUID.randomUUID(), null, null, null, null, null, null, null);
         Address address = mock(Address.class);
         Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Taco Place", address, CuisineType.PIZZERIA,
-                                               LocalTime.of(10, 0), LocalTime.of(22, 0), mock(User.class));
+                                               LocalTime.of(10, 0), LocalTime.of(22, 0), owner);
 
         // When
         restaurant.validate();
