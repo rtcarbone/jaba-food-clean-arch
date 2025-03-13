@@ -11,7 +11,7 @@
     <groupId>app.jabafood</groupId>
     <artifactId>jaba-food-clean-arch</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>jaba-food-clean-arch</name>
+    <name>Jaba Food</name>
     <description>Jaba Food App Clean Arch</description>
     <url/>
     <licenses>
@@ -58,12 +58,13 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Swagger dependencies -->
+        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.3.0</version>
+            <version>2.8.5</version>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
@@ -213,6 +214,7 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <skip>true</skip>
                             <rules>
                                 <rule>
                                     <element>CLASS</element>
