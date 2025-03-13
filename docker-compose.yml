@@ -65,12 +65,12 @@ services:
     volumes:
       - maven_cache:/root/.m2
       - ./jacoco-reports:/app/jacoco
-    entrypoint: [ "mvn", "clean", "verify" ]
+    entrypoint: [ "sh", "-c", "mvn clean verify" ]
     networks:
       - jaba_network
-    restart: "no"  # Container para após execução dos testes
+    restart: "no"
 
-  ### 🟢 Backend Principal (Só inicia se os testes passarem)
+  ### 🟢 Backend Principal
   jaba-food-backend-app:
     build:
       context: .
@@ -82,7 +82,7 @@ services:
       - "5005:5005"
     depends_on:
       run-tests:
-        condition: service_completed_successfully  # 🚀 Backend só inicia se os testes passarem
+        condition: service_completed_successfully  # Backend só inicia se os testes passarem
       postgres:
         condition: service_healthy
     environment:

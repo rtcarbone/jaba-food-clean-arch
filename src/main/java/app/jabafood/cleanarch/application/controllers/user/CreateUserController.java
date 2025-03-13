@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/users/create")
 @RequiredArgsConstructor
-@Slf4j
-@Tag(name = "Create User", description = "Create User API")
+@Tag(name = "User", description = "User Management API")
 public class CreateUserController {
     private final CreateUserUseCase createUserUseCase;
     private final UserMapper userMapper;

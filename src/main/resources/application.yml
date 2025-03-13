@@ -1,6 +1,6 @@
 spring:
   application:
-    name: jaba-food-backend-user
+    name: @project.name@
     version: @project.version@
     description: @project.description@
   datasource:
@@ -22,3 +22,11 @@ spring:
     user: ${FLYWAY_DATABASE_USER:user}
     password: ${FLYWAY_DATABASE_PASSWORD:password}
     enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    app.jabafood: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

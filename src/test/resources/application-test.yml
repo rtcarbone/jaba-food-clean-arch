@@ -10,3 +10,11 @@ spring:
       ddl-auto: update
   flyway:
     enabled: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    app.jabafood: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
