@@ -10,7 +10,7 @@
     </parent>
     <groupId>app.jabafood</groupId>
     <artifactId>jaba-food-clean-arch</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Jaba Food</name>
     <description>Jaba Food App Clean Arch</description>
     <url/>
