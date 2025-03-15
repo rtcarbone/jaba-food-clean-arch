@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres_test:5432/jaba_test
+    url: jdbc:postgresql://localhost:5432/jaba_test
     username: test_user
     password: test_password
     driver-class-name: org.postgresql.Driver
