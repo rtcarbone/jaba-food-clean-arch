@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
 public record UserUpdateRequestDTO(
 
         @NotBlank(message = "Name cannot be empty")
+        @Size(max = 255, message = "Name must be at most 255 characters")
         @Schema(description = "Full name of the user", example = "John Doe", maxLength = 255)
         String name,
 
@@ -24,7 +26,8 @@ public record UserUpdateRequestDTO(
         UserType userType,
 
         @NotBlank(message = "Login cannot be empty")
-        @Schema(description = "User login", example = "johndoe")
+        @Size(max = 50, message = "Login must be at most 50 characters")
+        @Schema(description = "User login", example = "johndoe", maxLength = 50)
         String login,
 
         @NotNull(message = "Address is required")
@@ -33,4 +36,3 @@ public record UserUpdateRequestDTO(
 
 ) implements Serializable {
 }
-

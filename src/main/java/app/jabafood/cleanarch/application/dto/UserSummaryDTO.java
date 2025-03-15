@@ -15,7 +15,7 @@ public record UserSummaryDTO(
 
         @Schema(description = "User's name",
                 example = "John Doe",
-                maxLength = 100)
+                maxLength = 255)
         String name
 
 ) implements Serializable {
