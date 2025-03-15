@@ -13,10 +13,10 @@ public record UserSummaryDTO(
                 format = "uuid")
         UUID id,
 
-        @Schema(description = "User login",
-                example = "johndoe",
+        @Schema(description = "User's name",
+                example = "John Doe",
                 maxLength = 100)
-        String login
+        String name
 
 ) implements Serializable {
 }
