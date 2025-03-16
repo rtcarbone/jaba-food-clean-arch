@@ -59,7 +59,7 @@ class DeleteMenuItemUseCaseTest {
         // When / Then
         assertThatExceptionOfType(MenuItemNotFoundException.class)
                 .isThrownBy(() -> deleteMenuItemUseCase.execute(menuItemId))
-                .withMessage("Menu item with ID " + menuItemId + " not found.");
+                .withMessage("Menu with ID '" + menuItemId + "' not found.");
 
         verify(menuItemGateway, never()).delete(any(UUID.class));
     }

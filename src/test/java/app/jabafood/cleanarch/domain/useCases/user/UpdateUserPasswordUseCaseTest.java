@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,35 +34,33 @@ public class UpdateUserPasswordUseCaseTest {
 
     @BeforeEach
     void setUp() {
-
         MockitoAnnotations.openMocks(this);
 
         userId = UUID.randomUUID();
-        existingUser = new User(userId, "John Doe", "john.doe@example.com", "johndoe", "oldPassword", UserType.CUSTOMER, null, null);
+        existingUser = new User(userId, "John Doe", "john.doe@example.com", "johndoe", "oldPassword", UserType.CUSTOMER, null, mock(Address.class));
 
         userPassword = new UserPassword("oldPassword", "newPassword", "newPassword");
     }
 
     @Test
     void shouldUpdateUserPasswordSuccess() {
-        // Criação de um usuário existente com uma senha
-        Address address = mock(Address.class);
-        User existingUser = new User(UUID.randomUUID(), "John Doe", "john.doe@example.com", "johndoe", "oldPassword", UserType.CUSTOMER, LocalDateTime.now(), address);
+        try {
+            User updatedData = new User(userId, "John Doe", "john.doe@example.com", "johndoe", "newPassword", UserType.CUSTOMER, null, mock(Address.class));
 
-        // Mock do método findById
-        when(userGateway.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
+            // Mock do metodo findById
+            when(userGateway.findById(userId)).thenReturn(Optional.of(existingUser));
+            when(userGateway.save(any(User.class))).thenReturn(updatedData);
 
-        // Criando um novo objeto UserPassword
-        UserPassword userPassword = new UserPassword("oldPassword", "newPassword", "newPassword");
+            // Executando a atualização da senha
+            User updatedUser = updateUserPasswordUseCase.execute(userId, userPassword);
 
-        // Executando a atualização da senha
-        User updatedUser = updateUserPasswordUseCase.execute(existingUser.getId(), userPassword);
-
-        // Verificando se a senha foi atualizada
-        assertNotNull(updatedUser);  // Verifique se o updatedUser não é nulo
-        assertEquals("newPassword", updatedUser.getPassword());
+            // Verificando se a senha foi atualizada
+            assertNotNull(updatedUser);  // Verifique se o updatedUser não é nulo
+            assertEquals("newPassword", updatedUser.getPassword());
+        } catch (Exception e) {
+            fail("An exception was thrown: " + e.getMessage());
+        }
     }
-
 
     @Test
     void shouldThrowInvalidPasswordExceptionWhenOldPasswordIsIncorrect() {
@@ -72,7 +69,6 @@ public class UpdateUserPasswordUseCaseTest {
 
         // Alterando a senha antiga no objeto userPassword para algo incorreto
         UserPassword invalidPassword = new UserPassword("wrongOldPassword", "newPassword", "newPassword");
-
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
             updateUserPasswordUseCase.execute(userId, invalidPassword);

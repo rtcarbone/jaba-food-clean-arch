@@ -60,7 +60,6 @@ class UpdateUserUseCaseTest {
         String updatedEmail = "john.updated@example.com";
         String updatedLogin = "johnupdated";
 
-
         User existingUser = new User(userId, "John Doe", "john@example.com", "johndoe", "password", UserType.RESTAURANT_OWNER, LocalDateTime.now(), mock(Address.class));
         User updatedUser = new User(userId, updatedName, updatedEmail, updatedLogin, "newpassword", UserType.RESTAURANT_OWNER, LocalDateTime.now(), mock(Address.class));
         when(userGateway.findById(userId)).thenReturn(Optional.of(existingUser));
@@ -75,16 +74,13 @@ class UpdateUserUseCaseTest {
             return savedUser;
         });
 
-
         User result = updateUserUseCase.execute(userId, updatedUser);
         assertEquals(updatedName, result.getName());
         assertEquals(updatedEmail, result.getEmail());
         assertEquals(updatedLogin, result.getLogin());
 
-
         verify(userGateway).save(any(User.class));
     }
-
 
     @Test
     void shouldThrowExceptionWhenUserNotFound() {
@@ -131,10 +127,8 @@ class UpdateUserUseCaseTest {
         List<Restaurant> associatedRestaurants = new ArrayList<>();
         associatedRestaurants.add(new Restaurant(UUID.randomUUID(), "Restaurant", address, cuisineType, openingTime, closingTime, owner));
 
-
         when(userGateway.findById(userId)).thenReturn(Optional.of(existingUser));
         when(restaurantGateway.findByOwnerId(userId)).thenReturn(associatedRestaurants);
-
 
         User updatedUser = new User(
                 userId,
@@ -147,11 +141,9 @@ class UpdateUserUseCaseTest {
                 mock(Address.class)
         );
 
-
         UpdateUserException exception = assertThrows(UpdateUserException.class, () -> {
             updateUserUseCase.execute(userId, updatedUser);
         });
-
 
         assertEquals("User type cannot be changed because the user is associated with one or more restaurants.", exception.getMessage());
     }

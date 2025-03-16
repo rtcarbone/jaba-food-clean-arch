@@ -47,7 +47,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             AddressNotFoundException.class,
             UserNotFoundException.class,
-            RestaurantNotFoundException.class
+            RestaurantNotFoundException.class,
+            MenuItemNotFoundException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleEntityNotFound(RuntimeException ex, WebRequest request) {
         return buildErrorResponse(ex, request, HttpStatus.NOT_FOUND);
@@ -66,7 +67,8 @@ public class GlobalExceptionHandler {
             RestaurantOwnerInvalidException.class,
             MenuItemMandatoryFieldException.class,
             MenuItemRestaurantInvalidException.class,
-            InvalidClosingTimeException.class
+            InvalidClosingTimeException.class,
+            InvalidPriceException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleBadRequest(RuntimeException ex, WebRequest request) {
         return buildErrorResponse(ex, request, HttpStatus.BAD_REQUEST);

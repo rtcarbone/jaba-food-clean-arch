@@ -18,5 +18,4 @@ public interface IUserGateway {
     List<User> findAll();
 
     void delete(UUID id);
-
 }

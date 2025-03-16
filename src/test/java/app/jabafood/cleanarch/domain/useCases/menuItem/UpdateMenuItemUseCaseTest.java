@@ -2,9 +2,9 @@ package app.jabafood.cleanarch.domain.useCases.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
+import app.jabafood.cleanarch.domain.exceptions.InvalidPriceException;
 import app.jabafood.cleanarch.domain.exceptions.MenuItemNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
-import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +21,10 @@ class UpdateMenuItemUseCaseTest {
 
     private UpdateMenuItemUseCase updateMenuItemUseCase;
     private IMenuItemGateway menuItemGateway;
-    private IRestaurantGateway restaurantGateway;
 
     @BeforeEach
     void setup() {
         menuItemGateway = mock(IMenuItemGateway.class);
-        restaurantGateway = mock(IRestaurantGateway.class);
         updateMenuItemUseCase = new UpdateMenuItemUseCase(menuItemGateway);
     }
 
@@ -36,10 +34,9 @@ class UpdateMenuItemUseCaseTest {
         UUID restaurantId = UUID.randomUUID();
         Restaurant restaurant = new Restaurant(restaurantId, "Pizza Place", null, null, null, null, null);
 
-
         UUID menuItemId = UUID.randomUUID();
         MenuItem existingItem = new MenuItem(menuItemId, "Old Sushi", "Delicious old sushi", BigDecimal.valueOf(10.99), false, "/images/burger.png", restaurant);
-        MenuItem updatedData = new MenuItem(menuItemId,"New Sushi", "Delicious new sushi", BigDecimal.valueOf(12.99), false, "/images/burger.png", restaurant);
+        MenuItem updatedData = new MenuItem(menuItemId, "New Sushi", "Delicious new sushi", BigDecimal.valueOf(12.99), false, "/images/burger.png", restaurant);
 
         when(menuItemGateway.findById(menuItemId)).thenReturn(Optional.of(existingItem));
         when(menuItemGateway.save(any(MenuItem.class))).thenReturn(updatedData);
@@ -79,8 +76,8 @@ class UpdateMenuItemUseCaseTest {
         when(menuItemGateway.findById(id)).thenReturn(Optional.of(existingItem));
 
         // When / Then
-        MenuItemNotFoundException exception = assertThrows(MenuItemNotFoundException.class, () -> updateMenuItemUseCase.execute(id, updatedData));
-        assertThat(exception.getMessage()).isEqualTo("Menu with ID" + id + " not found.");
+        InvalidPriceException exception = assertThrows(InvalidPriceException.class, () -> updateMenuItemUseCase.execute(id, updatedData));
+        assertThat(exception.getMessage()).isEqualTo("Price must be a value greater than or equal to 0.");
     }
 
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ class GetMenuItemByIdUseCaseTest {
         // Given
         Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Pizza Express", mock(Address.class), CuisineType.JAPANESE, null, null, null);
         UUID id = UUID.randomUUID();
-        MenuItem menuItem = new MenuItem(id, "Pizza Margherita", "Tomato, mozzarella, and basil", new BigDecimal("29.99"),false, "/images/burger.png", restaurant);
+        MenuItem menuItem = new MenuItem(id, "Pizza Margherita", "Tomato, mozzarella, and basil", new BigDecimal("29.99"), false, "/images/burger.png", restaurant);
 
         when(menuItemGateway.findById(id)).thenReturn(Optional.of(menuItem));
 
@@ -58,7 +57,7 @@ class GetMenuItemByIdUseCaseTest {
         // When / Then
         assertThatExceptionOfType(MenuItemNotFoundException.class)
                 .isThrownBy(() -> getMenuItemByIdUseCase.execute(id))
-                .withMessage("Menu item with ID '" + id + "' not found.");
+                .withMessage("Menu with ID '" + id + "' not found.");
 
         verify(menuItemGateway, times(1)).findById(id);
     }

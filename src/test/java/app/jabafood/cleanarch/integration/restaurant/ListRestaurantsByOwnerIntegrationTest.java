@@ -3,14 +3,12 @@ package app.jabafood.cleanarch.integration.restaurant;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.useCases.restaurant.ListRestaurantsByOwnerUseCase;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.RestaurantEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,12 +48,6 @@ class ListRestaurantsByOwnerIntegrationTest {
 
     @Autowired
     private ListRestaurantsByOwnerUseCase listRestaurantsByOwnerUseCase;
-
-    @Autowired
-    private IRestaurantGateway restaurantGateway;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private UUID ownerId;
 

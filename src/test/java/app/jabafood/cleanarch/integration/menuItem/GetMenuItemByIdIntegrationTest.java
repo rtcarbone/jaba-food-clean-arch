@@ -2,13 +2,15 @@ package app.jabafood.cleanarch.integration.menuItem;
 
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
+import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.useCases.menuItem.GetMenuItemByIdUseCase;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.MenuItemEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.RestaurantEntity;
+import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.MenuItemJpaRepository;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -44,16 +47,17 @@ public class GetMenuItemByIdIntegrationTest {
     private MenuItemJpaRepository menuItemJpaRepository;
 
     @Autowired
-    private GetMenuItemByIdUseCase getMenuItemByIdUseCase;
+    private RestaurantJpaRepository restaurantJpaRepository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private UserJpaRepository userJpaRepository;
+
+    @Autowired
+    private GetMenuItemByIdUseCase getMenuItemByIdUseCase;
 
     private String url;
 
     private UUID menuItemId;
-    @Autowired
-    private RestaurantJpaRepository restaurantJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -61,10 +65,16 @@ public class GetMenuItemByIdIntegrationTest {
 
         menuItemJpaRepository.deleteAll();
         restaurantJpaRepository.deleteAll();
+        userJpaRepository.deleteAll();
 
-        // Criando um restaurante
+        // Criando um usuário para associar ao Restaurant
+        UserEntity owner = new UserEntity(null, "John Doe", "john.doe@example.com", "johndoe", "123456", UserType.RESTAURANT_OWNER,
+                                          new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", LocalDateTime.now()));
+        userJpaRepository.save(owner);
+
+        // Criando um restaurante para associar ao MenuItem
         RestaurantEntity restaurant = new RestaurantEntity(null, "Sabor Italiano",
-                new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), null, null, null);
+                                                           new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", LocalDateTime.now()), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), owner, null, LocalDateTime.now());
         restaurantJpaRepository.save(restaurant);
 
         // Criando um item de menu para teste
@@ -76,13 +86,14 @@ public class GetMenuItemByIdIntegrationTest {
         menuItemEntity.setInRestaurantOnly(true);
         menuItemEntity.setRestaurant(restaurant);
         menuItemJpaRepository.save(menuItemEntity);
+
         menuItemId = menuItemEntity.getId();
     }
 
     @Test
     void shouldRetrieveMenuItemByIdThroughController() throws Exception {
         mockMvc.perform(get(url, menuItemId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(menuItemId.toString()))
                 .andExpect(jsonPath("$.name").value("Pizza Margherita"));
@@ -102,7 +113,7 @@ public class GetMenuItemByIdIntegrationTest {
         UUID nonExistentId = UUID.randomUUID();
 
         mockMvc.perform(get(url, nonExistentId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }

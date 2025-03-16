@@ -77,6 +77,6 @@ class CreateMenuItemUseCaseTest {
                 () -> createMenuItemUseCase.execute(menuItem)
         );
 
-        assertThat(exception.getMessage()).isEqualTo("Restaurant with ID " + restaurantId + " not found.");
+        assertThat(exception.getMessage()).isEqualTo("Restaurant with ID '" + restaurantId + "' not found.");
     }
 }

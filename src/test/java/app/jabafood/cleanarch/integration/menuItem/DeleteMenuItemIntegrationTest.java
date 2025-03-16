@@ -2,7 +2,6 @@ package app.jabafood.cleanarch.integration.menuItem;
 
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import app.jabafood.cleanarch.domain.useCases.menuItem.DeleteMenuItemUseCase;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.MenuItemEntity;
@@ -11,7 +10,6 @@ import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.MenuItemJpaRepository;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,19 +52,13 @@ class DeleteMenuItemIntegrationTest {
     @Autowired
     private DeleteMenuItemUseCase deleteMenuItemUseCase;
 
-    @Autowired
-    private IMenuItemGateway menuItemGateway;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private UUID menuItemId;
 
     private String url;
 
     @BeforeEach
     void setup() {
-        url = "api/v1/menu-items/{id}/delete";
+        url = "/api/v1/menu-items/{id}/delete";
 
         menuItemJpaRepository.deleteAll();
         restaurantJpaRepository.deleteAll();
@@ -96,7 +88,7 @@ class DeleteMenuItemIntegrationTest {
     @Test
     void shouldDeleteMenuItemSuccessfullyThroughController() throws Exception {
         mockMvc.perform(delete(url, menuItemId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         assertThat(menuItemJpaRepository.findById(menuItemId)).isEmpty();
@@ -114,7 +106,7 @@ class DeleteMenuItemIntegrationTest {
         UUID nonExistentId = UUID.randomUUID();
 
         mockMvc.perform(delete(url, nonExistentId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }

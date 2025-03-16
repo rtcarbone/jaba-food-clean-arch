@@ -37,42 +37,42 @@ class MenuItemTest {
     @Test
     void shouldThrowExceptionWhenNameIsNull() {
         assertThrows(MenuItemMandatoryFieldException.class, () ->
-                new MenuItem(UUID.randomUUID(), null, "Desc", BigDecimal.TEN, true, "path", mock(Restaurant.class))
+                new MenuItem(UUID.randomUUID(), null, "Desc", BigDecimal.TEN, true, "path", mock(Restaurant.class)).validate()
         );
     }
 
     @Test
     void shouldThrowExceptionWhenDescriptionIsNull() {
         assertThrows(MenuItemMandatoryFieldException.class, () ->
-                new MenuItem(UUID.randomUUID(), "Pizza", null, BigDecimal.TEN, true, "path", mock(Restaurant.class))
+                new MenuItem(UUID.randomUUID(), "Pizza", null, BigDecimal.TEN, true, "path", mock(Restaurant.class)).validate()
         );
     }
 
     @Test
     void shouldThrowExceptionWhenPriceIsNull() {
         assertThrows(MenuItemMandatoryFieldException.class, () ->
-                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", null, true, "path", mock(Restaurant.class))
+                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", null, true, "path", mock(Restaurant.class)).validate()
         );
     }
 
     @Test
     void shouldThrowExceptionWhenInRestaurantOnlyIsNull() {
         assertThrows(MenuItemMandatoryFieldException.class, () ->
-                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", BigDecimal.TEN, null, "path", mock(Restaurant.class))
+                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", BigDecimal.TEN, null, "path", mock(Restaurant.class)).validate()
         );
     }
 
     @Test
     void shouldThrowExceptionWhenImagePathIsNull() {
         assertThrows(MenuItemMandatoryFieldException.class, () ->
-                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", BigDecimal.TEN, true, null, mock(Restaurant.class))
+                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", BigDecimal.TEN, true, null, mock(Restaurant.class)).validate()
         );
     }
 
     @Test
     void shouldThrowExceptionWhenRestaurantIsNull() {
         assertThrows(MenuItemMandatoryFieldException.class, () ->
-                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", BigDecimal.TEN, true, "path", null)
+                new MenuItem(UUID.randomUUID(), "Pizza", "Desc", BigDecimal.TEN, true, "path", null).validate()
         );
     }
 

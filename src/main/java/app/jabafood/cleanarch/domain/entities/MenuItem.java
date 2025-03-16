@@ -1,5 +1,6 @@
 package app.jabafood.cleanarch.domain.entities;
 
+import app.jabafood.cleanarch.domain.exceptions.InvalidPriceException;
 import app.jabafood.cleanarch.domain.exceptions.MenuItemMandatoryFieldException;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,8 @@ public class MenuItem {
         }
         if (price == null) {
             throw new MenuItemMandatoryFieldException("price");
+        } else if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidPriceException();
         }
         if (inRestaurantOnly == null) {
             throw new MenuItemMandatoryFieldException("inRestaurantOnly");
