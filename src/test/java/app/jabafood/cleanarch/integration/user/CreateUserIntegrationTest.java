@@ -5,7 +5,6 @@ import app.jabafood.cleanarch.application.dto.UserRequestDTO;
 import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.useCases.user.CreateUserUseCase;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,9 +44,6 @@ class CreateUserIntegrationTest {
     private CreateUserUseCase createUserUseCase;
 
     @Autowired
-    private IUserGateway userGateway;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     private String url;
@@ -65,17 +61,19 @@ class CreateUserIntegrationTest {
         String userJson = objectMapper.writeValueAsString(user);
 
         MvcResult result = mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson))
+                                                   .contentType(MediaType.APPLICATION_JSON)
+                                                   .content(userJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Jane Doe"))
                 .andExpect(jsonPath("$.email").value("jane@example.com"))
                 .andExpect(jsonPath("$.userType").value("CUSTOMER"))
                 .andReturn();
 
-        String jsonResponse = result.getResponse().getContentAsString();
+        String jsonResponse = result.getResponse()
+                .getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-        String userId = jsonNode.get("id").asText();
+        String userId = jsonNode.get("id")
+                .asText();
 
         assertThat(userId).isNotEmpty();
     }
@@ -111,8 +109,8 @@ class CreateUserIntegrationTest {
                 """;
 
         mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidUserJson))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(invalidUserJson))
                 .andExpect(status().isBadRequest());
     }
 }

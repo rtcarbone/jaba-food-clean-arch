@@ -2,7 +2,8 @@ package app.jabafood.cleanarch.integration.user;
 
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.useCases.user.UpdateUserUseCase;
+import app.jabafood.cleanarch.domain.useCases.user.UpdateUserPasswordUseCase;
+import app.jabafood.cleanarch.domain.valueObjects.UserPassword;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
-class UpdateUserIntegrationTest {
+class UpdateUserPasswordIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,18 +40,19 @@ class UpdateUserIntegrationTest {
     private UserJpaRepository userJpaRepository;
 
     @Autowired
-    private UpdateUserUseCase updateUserUseCase;
+    private UpdateUserPasswordUseCase updateUserPasswordUseCase;
 
     private UUID userId;
     private String url;
 
     @BeforeEach
     void setup() {
-        url = "/api/v1/users/{id}/update";
+        url = "/api/v1/users/{id}/update-password";
+
         userJpaRepository.deleteAll();
 
         // Criando um usuário de teste
-        UserEntity user = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER,
+        UserEntity user = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.CUSTOMER,
                                          new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(user);
 
@@ -58,32 +60,30 @@ class UpdateUserIntegrationTest {
     }
 
     @Test
-    void shouldUpdateUserSuccessfullyThroughController() throws Exception {
+    void shouldUpdateUserPasswordSuccessfullyThroughController() throws Exception {
         String updateUserJson = """
                     {
-                        "name": "Updated Name",
-                        "userType": "CUSTOMER"
+                        "oldPassword": "password",
+                        "newPassword": "newPassword",
+                        "repeatNewPassword": "newPassword"
                     }
                 """;
 
         mockMvc.perform(put(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateUserJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Updated Name"))
-                .andExpect(jsonPath("$.userType").value("CUSTOMER"));
+                .andExpect(status().isOk());
     }
 
     @Test
-    void shouldUpdateUserSuccessfullyThroughUseCase() {
-        User updatedUser = new User(userId, "Updated Name", "johndoe", "john@example.com", "password", UserType.CUSTOMER, null, null);
+    void shouldUpdateUserPasswordSuccessfullyThroughUseCase() {
+        UserPassword userPassword = new UserPassword("password", "newPassword", "newPassword");
 
-        User result = updateUserUseCase.execute(userId, updatedUser);
+        User userUpdated = updateUserPasswordUseCase.execute(userId, userPassword);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(userId);
-        assertThat(result.getName()).isEqualTo("Updated Name");
-        assertThat(result.getUserType()).isEqualTo(UserType.CUSTOMER);
+        assertThat(userUpdated).isNotNull();
+        assertThat(userUpdated.getId()).isEqualTo(userId);
+        assertThat(userUpdated.getPassword()).isEqualTo("newPassword");
     }
 
     @Test
@@ -92,8 +92,9 @@ class UpdateUserIntegrationTest {
 
         String updateUserJson = """
                     {
-                        "name": "New Name",
-                        "userType": "ADMIN"
+                        "oldPassword": "password",
+                        "newPassword": "newPassword",
+                        "repeatNewPassword": "newPassword"
                     }
                 """;
 
@@ -105,34 +106,36 @@ class UpdateUserIntegrationTest {
     }
 
     @Test
-    void shouldReturnBadRequestWhenUserTypeIsInvalid() throws Exception {
-        String invalidUserJson = """
+    void shouldReturnBadRequestWhenOldPasswordIsIncorrect() throws Exception {
+        String updateUserJson = """
                     {
-                        "name": "Invalid User",
-                        "userType": "UNKNOWN_TYPE"
+                        "oldPassword": "wrongPassword",
+                        "newPassword": "newPassword",
+                        "repeatNewPassword": "newPassword"
                     }
                 """;
 
         mockMvc.perform(put(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(invalidUserJson))
+                                .content(updateUserJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Invalid user type"));
+                .andExpect(jsonPath("$.message").value("Old password is incorrect"));
     }
 
     @Test
-    void shouldReturnBadRequestWhenNameIsEmpty() throws Exception {
-        String invalidUserJson = """
+    void shouldReturnBadRequestWhenNewPasswordsDoNotMatch() throws Exception {
+        String updateUserJson = """
                     {
-                        "name": "",
-                        "userType": "CUSTOMER"
+                        "oldPassword": "password",
+                        "newPassword": "newPassword",
+                        "repeatNewPassword": "differentPassword"
                     }
                 """;
 
         mockMvc.perform(put(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(invalidUserJson))
+                                .content(updateUserJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Name cannot be empty"));
+                .andExpect(jsonPath("$.message").value("New passwords do not match"));
     }
 }
