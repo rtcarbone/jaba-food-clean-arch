@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.application.config;
+package app.jabafood.cleanarch.infrastructure.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

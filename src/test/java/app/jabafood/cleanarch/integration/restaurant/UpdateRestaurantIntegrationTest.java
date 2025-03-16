@@ -84,8 +84,8 @@ class UpdateRestaurantIntegrationTest {
                     {
                         "name": "Updated Name",
                         "cuisineType": "ITALIAN",
-                        "openingTime": "09:00:00",
-                        "closingTime": "23:00:00"
+                        "openingTime": "09:00",
+                        "closingTime": "23:00"
                     }
                 """;
 
@@ -96,8 +96,8 @@ class UpdateRestaurantIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Name"))
                 .andExpect(jsonPath("$.cuisineType").value("ITALIAN"))
-                .andExpect(jsonPath("$.openingTime").value("09:00:00"))
-                .andExpect(jsonPath("$.closingTime").value("23:00:00"));
+                .andExpect(jsonPath("$.openingTime").value("09:00"))
+                .andExpect(jsonPath("$.closingTime").value("23:00"));
     }
 
     @Test
@@ -127,8 +127,8 @@ class UpdateRestaurantIntegrationTest {
                     {
                         "name": "New Name",
                         "cuisineType": "JAPANESE",
-                        "openingTime": "08:00:00",
-                        "closingTime": "22:00:00"
+                        "openingTime": "08:00",
+                        "closingTime": "22:00"
                     }
                 """;
 

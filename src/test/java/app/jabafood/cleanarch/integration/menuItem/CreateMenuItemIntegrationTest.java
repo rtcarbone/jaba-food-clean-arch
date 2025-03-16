@@ -111,7 +111,7 @@ class CreateMenuItemIntegrationTest {
 
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content(menuItemJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Sushi Roll"))
                 .andExpect(jsonPath("$.description").value("Delicious sushi roll"))
                 .andExpect(jsonPath("$.price").value(15.99));

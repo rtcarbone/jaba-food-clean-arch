@@ -32,7 +32,7 @@ public record AddressRequestDTO(
         @NotBlank(message = "Country cannot be blank")
         @Size(max = 100, message = "Country name must be at most 100 characters")
         @Schema(description = "Country name", example = "United States", maxLength = 100)
-        String countr
+        String country
 
 ) implements Serializable {
 }

@@ -1,4 +1,4 @@
-package app.jabafood.cleanarch.application.config;
+package app.jabafood.cleanarch.infrastructure.config;
 
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;

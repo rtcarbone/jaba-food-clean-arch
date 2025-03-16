@@ -92,7 +92,7 @@ class CreateRestaurantIntegrationTest {
         // Realiza a requisição POST para o endpoint da API
         MvcResult result = mockMvc.perform(post("/api/v1/users/create").contentType(MediaType.APPLICATION_JSON)
                                                    .content(ownerJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String jsonResponse = result.getResponse()
@@ -109,11 +109,11 @@ class CreateRestaurantIntegrationTest {
         // Realiza a requisição POST para o endpoint da API
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content(restaurantJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Sushi Place"))
                 .andExpect(jsonPath("$.cuisineType").value("JAPANESE"))
-                .andExpect(jsonPath("$.openingTime").value("18:00:00"))
-                .andExpect(jsonPath("$.closingTime").value("23:00:00"));
+                .andExpect(jsonPath("$.openingTime").value("18:00"))
+                .andExpect(jsonPath("$.closingTime").value("23:00"));
     }
 
     @Test

@@ -63,7 +63,7 @@ class CreateUserIntegrationTest {
         MvcResult result = mockMvc.perform(post(url)
                                                    .contentType(MediaType.APPLICATION_JSON)
                                                    .content(userJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Jane Doe"))
                 .andExpect(jsonPath("$.email").value("jane@example.com"))
                 .andExpect(jsonPath("$.userType").value("CUSTOMER"))
