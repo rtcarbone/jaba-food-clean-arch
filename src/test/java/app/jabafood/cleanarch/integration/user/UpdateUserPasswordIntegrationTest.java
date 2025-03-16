@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,10 +69,10 @@ class UpdateUserPasswordIntegrationTest {
                     }
                 """;
 
-        mockMvc.perform(put(url, userId)
+        mockMvc.perform(patch(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateUserJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -98,11 +98,11 @@ class UpdateUserPasswordIntegrationTest {
                     }
                 """;
 
-        mockMvc.perform(put(url, nonExistentUserId)
+        mockMvc.perform(patch(url, nonExistentUserId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateUserJson))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("User not found"));
+                .andExpect(jsonPath("$.message").value("User with ID '" + nonExistentUserId + "' not found."));
     }
 
     @Test
@@ -115,11 +115,11 @@ class UpdateUserPasswordIntegrationTest {
                     }
                 """;
 
-        mockMvc.perform(put(url, userId)
+        mockMvc.perform(patch(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateUserJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Old password is incorrect"));
+                .andExpect(jsonPath("$.message").value("The old password is invalid"));
     }
 
     @Test
@@ -132,10 +132,10 @@ class UpdateUserPasswordIntegrationTest {
                     }
                 """;
 
-        mockMvc.perform(put(url, userId)
+        mockMvc.perform(patch(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateUserJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("New passwords do not match"));
+                .andExpect(jsonPath("$.message").value("New password and repeat new password do not match"));
     }
 }

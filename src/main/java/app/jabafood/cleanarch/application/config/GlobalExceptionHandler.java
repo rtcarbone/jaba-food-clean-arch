@@ -2,11 +2,13 @@ package app.jabafood.cleanarch.application.config;
 
 import app.jabafood.cleanarch.application.dto.ErrorResponseDTO;
 import app.jabafood.cleanarch.domain.exceptions.*;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -14,6 +16,8 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,6 +41,27 @@ public class GlobalExceptionHandler {
                 status.value()
         );
         return new ResponseEntity<>(errorResponse, status);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidEnum(HttpMessageNotReadableException ex, WebRequest request) {
+        Throwable rootCause = ex.getCause();
+
+        if (rootCause instanceof InvalidFormatException invalidFormatException) {
+            Class<?> targetType = invalidFormatException.getTargetType();
+            if (targetType.isEnum()) {
+                String acceptedValues = Arrays.stream(targetType.getEnumConstants())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", "));
+
+                String errorMessage = String.format("Invalid value '%s' for enum %s. Accepted values: [%s]",
+                                                    invalidFormatException.getValue(), targetType.getSimpleName(), acceptedValues);
+
+                return buildErrorResponse(new InvalidEnumException(errorMessage), request, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return buildErrorResponse(ex, request, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({EmailAlreadyInUseException.class, LoginAlreadyInUseException.class})
@@ -93,5 +118,4 @@ public class GlobalExceptionHandler {
         logger.error("Unhandled exception caught: ", ex);
         return buildErrorResponse(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }

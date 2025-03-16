@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserType {
     CUSTOMER("Customer"),
-    RESTAURANT_OWNER("Restaurant Owner"),;
+    RESTAURANT_OWNER("Restaurant Owner");
 
     private final String name;
 }

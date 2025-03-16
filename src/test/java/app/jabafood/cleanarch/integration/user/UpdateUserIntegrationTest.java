@@ -93,7 +93,7 @@ class UpdateUserIntegrationTest {
         String updateUserJson = """
                     {
                         "name": "New Name",
-                        "userType": "ADMIN"
+                        "userType": "RESTAURANT_OWNER"
                     }
                 """;
 
@@ -101,7 +101,7 @@ class UpdateUserIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updateUserJson))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("User not found"));
+                .andExpect(jsonPath("$.message").value("User with ID '" + nonExistentUserId + "' not found."));
     }
 
     @Test
@@ -117,7 +117,7 @@ class UpdateUserIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(invalidUserJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Invalid user type"));
+                .andExpect(jsonPath("$.message").value("Invalid enum value: Invalid value 'UNKNOWN_TYPE' for enum UserType. Accepted values: [CUSTOMER, RESTAURANT_OWNER]"));
     }
 
     @Test
@@ -133,6 +133,6 @@ class UpdateUserIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(invalidUserJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Name cannot be empty"));
+                .andExpect(jsonPath("$.message").value("The field 'name' is mandatory for user registration."));
     }
 }
