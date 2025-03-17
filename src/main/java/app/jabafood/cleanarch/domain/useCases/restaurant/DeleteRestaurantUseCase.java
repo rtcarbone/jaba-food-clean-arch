@@ -11,10 +11,9 @@ public class DeleteRestaurantUseCase {
     private final IRestaurantGateway restaurantGateway;
 
     public void execute(UUID id) {
-        if (restaurantGateway.findById(id)
-                .isEmpty()) {
-            throw new RestaurantNotFoundException(id);
-        }
+        restaurantGateway.findById(id)
+                .orElseThrow(() -> new RestaurantNotFoundException(id));
+
         restaurantGateway.delete(id);
     }
 }

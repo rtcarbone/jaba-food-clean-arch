@@ -11,10 +11,9 @@ public class DeleteMenuItemUseCase {
     private final IMenuItemGateway menuItemGateway;
 
     public void execute(UUID id) {
-        if (menuItemGateway.findById(id)
-                .isEmpty()) {
-            throw new MenuItemNotFoundException(id);
-        }
+        menuItemGateway.findById(id)
+                .orElseThrow(() -> new MenuItemNotFoundException(id));
+
         menuItemGateway.delete(id);
     }
 }
