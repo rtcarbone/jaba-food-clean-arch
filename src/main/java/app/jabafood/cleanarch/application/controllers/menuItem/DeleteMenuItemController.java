@@ -24,7 +24,7 @@ public class DeleteMenuItemController {
 
     @Operation(summary = "Delete a menu item")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Menu item deleted successfully"),
+            @ApiResponse(responseCode = "204", description = "Menu item deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Menu item not found")
     })
     @DeleteMapping

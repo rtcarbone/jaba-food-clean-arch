@@ -23,7 +23,7 @@ public class UpdateUserPasswordController {
 
     @Operation(summary = "Update user password")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User password updated successfully"),
+            @ApiResponse(responseCode = "204", description = "User password updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PatchMapping

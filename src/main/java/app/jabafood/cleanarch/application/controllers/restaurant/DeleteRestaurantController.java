@@ -23,7 +23,7 @@ public class DeleteRestaurantController {
 
     @Operation(summary = "Delete a restaurant")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Restaurant deleted successfully"),
+            @ApiResponse(responseCode = "204", description = "Restaurant deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Restaurant not found")
     })
     @DeleteMapping
