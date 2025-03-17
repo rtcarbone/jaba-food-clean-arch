@@ -49,11 +49,7 @@ class ListUsersIntegrationTest {
 
         userJpaRepository.deleteAll();
 
-        // Criando usuarios
-        // Criando um usuario para teste
         UserEntity user = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
-
-        // Criando um usuario para teste
         UserEntity user2 = new UserEntity(null, "John Doe 2", "johndoe2", "john2@example.com", "password", UserType.CUSTOMER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
 
         userJpaRepository.saveAll(List.of(user, user2));
@@ -61,7 +57,6 @@ class ListUsersIntegrationTest {
 
     @Test
     void shouldListAllUsersSuccessfullyThroughController() throws Exception {
-        // Realiza a requisição GET para listar os usuarios
         mockMvc.perform(get(url)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -72,10 +67,8 @@ class ListUsersIntegrationTest {
 
     @Test
     void shouldListAllUsersSuccessfullyThroughUseCase() {
-        // Usa o use case diretamente
         List<User> users = listUsersUseCase.execute();
 
-        // Valida que os dados retornados estão corretos
         assertThat(users).isNotEmpty();
         assertThat(users).hasSize(2);
         assertThat(users.get(0)
@@ -86,16 +79,13 @@ class ListUsersIntegrationTest {
 
     @Test
     void shouldReturnEmptyListWhenNoUsersExist() throws Exception {
-        // Limpa os dados do banco de dados antes do teste
         userJpaRepository.deleteAll();
 
-        // Realiza a requisição GET para um banco de dados vazio
         mockMvc.perform(get(url)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
 
-        // Usa o use case diretamente
         List<User> users = listUsersUseCase.execute();
         assertThat(users).isEmpty();
     }

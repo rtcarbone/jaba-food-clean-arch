@@ -60,11 +60,9 @@ class UpdateRestaurantIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante para teste
         RestaurantEntity restaurantEntity = new RestaurantEntity();
         restaurantEntity.setName("Pizza Express");
         restaurantEntity.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
@@ -79,7 +77,6 @@ class UpdateRestaurantIntegrationTest {
 
     @Test
     void shouldUpdateRestaurantSuccessfullyThroughController() throws Exception {
-        // Criando um JSON com os novos dados
         String updatedRestaurantJson = """
                     {
                         "name": "Updated Name",
@@ -89,7 +86,6 @@ class UpdateRestaurantIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição PUT para atualizar o restaurante
         mockMvc.perform(put(url, restaurantId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updatedRestaurantJson))
@@ -102,17 +98,14 @@ class UpdateRestaurantIntegrationTest {
 
     @Test
     void shouldUpdateRestaurantSuccessfullyThroughUseCase() {
-        // Criando um novo objeto Restaurante
         User owner = new User(UUID.randomUUID(), "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
         Restaurant updatedRestaurant = new Restaurant(
                 restaurantId, "Updated Name", null, CuisineType.ITALIAN,
                 LocalTime.of(9, 0), LocalTime.of(23, 0), owner
         );
 
-        // Usa o use case diretamente
         Restaurant result = updateRestaurantUseCase.execute(restaurantId, updatedRestaurant);
 
-        // Valida que os dados retornados estão corretos
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(restaurantId);
         assertThat(result.getName()).isEqualTo("Updated Name");
@@ -132,7 +125,6 @@ class UpdateRestaurantIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição PUT para um ID inexistente
         mockMvc.perform(put(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updatedRestaurantJson))
@@ -150,7 +142,6 @@ class UpdateRestaurantIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição PUT para um horário inválido
         mockMvc.perform(put(url, restaurantId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(invalidRestaurantJson))

@@ -103,10 +103,8 @@ class CreateRestaurantIntegrationTest {
 
         RestaurantRequestDTO restaurant = new RestaurantRequestDTO("Sushi Place", new AddressRequestDTO("Rua Fake", "São Paulo", "SP", "00000-000", "Brazil"), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), UUID.fromString(ownerId));
 
-        // Serializa o objeto para JSON
         String restaurantJson = objectMapper.writeValueAsString(restaurant);
 
-        // Realiza a requisição POST para o endpoint da API
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content(restaurantJson))
                 .andExpect(status().isCreated())
@@ -133,10 +131,8 @@ class CreateRestaurantIntegrationTest {
 
         Restaurant restaurant = new Restaurant(null, "Sushi Place", new Address(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil"), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), createdOwner);
 
-        // Usa o use case diretamente
         Restaurant createdRestaurant = createRestaurantUseCase.execute(restaurant);
 
-        // Valida que os dados retornados estão corretos
         assertThat(createdRestaurant).isNotNull();
         assertThat(createdRestaurant.getId()).isNotNull();
         assertThat(createdRestaurant.getName()).isEqualTo("Sushi Place");
@@ -145,7 +141,6 @@ class CreateRestaurantIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenMissingRequiredFields() throws Exception {
-        // Criando um JSON inválido sem nome
         String invalidRestaurantJson = """
                     {
                         "cuisineType": "JAPANESE",
@@ -154,7 +149,6 @@ class CreateRestaurantIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição POST para a API
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content(invalidRestaurantJson))
                 .andExpect(status().isBadRequest());

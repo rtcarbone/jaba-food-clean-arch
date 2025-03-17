@@ -49,7 +49,6 @@ class DeleteUserIntegrationTest {
 
         userJpaRepository.deleteAll();
 
-        // Criando um usuario para teste
         UserEntity user = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(user);
 
@@ -58,21 +57,17 @@ class DeleteUserIntegrationTest {
 
     @Test
     void shouldDeleteUserSuccessfullyThroughController() throws Exception {
-        // Realiza a requisição DELETE para excluir o restaurante
         mockMvc.perform(delete(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        // Verifica que o usuario foi removido
         assertThat(userJpaRepository.findById(userId)).isEmpty();
     }
 
     @Test
     void shouldDeleteUserSuccessfullyThroughUseCase() {
-        // Usa o use case diretamente
         deleteUserUseCase.execute(userId);
 
-        // Verifica que o usuario foi removido do banco
         assertThat(userJpaRepository.findById(userId)).isEmpty();
     }
 
@@ -80,7 +75,6 @@ class DeleteUserIntegrationTest {
     void shouldReturnNotFoundWhenUserDoesNotExist() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
 
-        // Realiza a requisição DELETE para um usuario inexistente
         mockMvc.perform(delete(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

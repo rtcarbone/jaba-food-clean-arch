@@ -2,15 +2,12 @@ package app.jabafood.cleanarch.integration.restaurant;
 
 import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.enums.UserType;
-import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
-import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.useCases.restaurant.DeleteRestaurantUseCase;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.AddressEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.RestaurantEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.entities.UserEntity;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.RestaurantJpaRepository;
 import app.jabafood.cleanarch.infrastructure.persistence.repositories.UserJpaRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,15 +46,6 @@ class DeleteRestaurantIntegrationTest {
     @Autowired
     private DeleteRestaurantUseCase deleteRestaurantUseCase;
 
-    @Autowired
-    private IRestaurantGateway restaurantGateway;
-
-    @Autowired
-    private IUserGateway userGateway;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private UUID restaurantId;
 
     private String url;
@@ -69,11 +57,9 @@ class DeleteRestaurantIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante para teste
         RestaurantEntity restaurantEntity = new RestaurantEntity();
         restaurantEntity.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurantEntity.setName("Pizza Express");
@@ -88,21 +74,17 @@ class DeleteRestaurantIntegrationTest {
 
     @Test
     void shouldDeleteRestaurantSuccessfullyThroughController() throws Exception {
-        // Realiza a requisição DELETE para excluir o restaurante
         mockMvc.perform(delete(url, restaurantId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        // Verifica que o restaurante foi removido
         assertThat(restaurantJpaRepository.findById(restaurantId)).isEmpty();
     }
 
     @Test
     void shouldDeleteRestaurantSuccessfullyThroughUseCase() {
-        // Usa o use case diretamente
         deleteRestaurantUseCase.execute(restaurantId);
 
-        // Verifica que o restaurante foi removido do banco
         assertThat(restaurantJpaRepository.findById(restaurantId)).isEmpty();
     }
 
@@ -110,7 +92,6 @@ class DeleteRestaurantIntegrationTest {
     void shouldReturnNotFoundWhenRestaurantDoesNotExist() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
 
-        // Realiza a requisição DELETE para um restaurante inexistente
         mockMvc.perform(delete(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

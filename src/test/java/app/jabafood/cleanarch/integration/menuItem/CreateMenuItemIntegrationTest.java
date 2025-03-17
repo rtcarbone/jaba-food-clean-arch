@@ -86,11 +86,9 @@ class CreateMenuItemIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante
         RestaurantEntity restaurant = new RestaurantEntity();
         restaurant.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurant.setName("Pizza Express");
@@ -144,7 +142,6 @@ class CreateMenuItemIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenMissingRequiredFields() throws Exception {
-        // Criando um JSON inválido sem nome
         String invalidMenuItemJson = """
                 {
                     "name": "Sushi",
@@ -153,7 +150,6 @@ class CreateMenuItemIntegrationTest {
                 }
                 """;
 
-        // Realiza a requisição POST para a API
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content(invalidMenuItemJson))
                 .andExpect(status().isBadRequest());

@@ -64,11 +64,9 @@ class DeleteMenuItemIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante
         RestaurantEntity restaurant = new RestaurantEntity();
         restaurant.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurant.setName("Pizza Express");
@@ -78,7 +76,6 @@ class DeleteMenuItemIntegrationTest {
         restaurant.setOwner(owner);
         restaurantJpaRepository.save(restaurant);
 
-        // Criando um item do menu
         MenuItemEntity menuItemEntity = new MenuItemEntity(null, "Margherita Pizza", "Delicious pizza with cheese and tomato", BigDecimal.valueOf(15.99), false, "/images/burger.png", restaurant);
         menuItemJpaRepository.save(menuItemEntity);
 

@@ -51,7 +51,6 @@ class UpdateUserPasswordIntegrationTest {
 
         userJpaRepository.deleteAll();
 
-        // Criando um usuário de teste
         UserEntity user = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.CUSTOMER,
                                          new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(user);

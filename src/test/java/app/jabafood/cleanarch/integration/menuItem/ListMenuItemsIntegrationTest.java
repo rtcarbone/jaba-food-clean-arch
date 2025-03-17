@@ -69,17 +69,14 @@ class ListMenuItemsIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um usuário para associar ao Restaurant
         UserEntity owner = new UserEntity(null, "John Doe", "john.doe@example.com", "johndoe", "123456", UserType.RESTAURANT_OWNER,
                                           new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", LocalDateTime.now()));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante para associar ao MenuItem
         RestaurantEntity restaurant = new RestaurantEntity(null, "Sabor Italiano",
                                                            new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", LocalDateTime.now()), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), owner, null, LocalDateTime.now());
         restaurantJpaRepository.save(restaurant);
 
-        // Criando um item de menu para teste
         MenuItemEntity menuItem1 = new MenuItemEntity();
         menuItem1.setName("Pizza Margherita");
         menuItem1.setDescription("Delicious pizza with tomato, mozzarella, and basil");

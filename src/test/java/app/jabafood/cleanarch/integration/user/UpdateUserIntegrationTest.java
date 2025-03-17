@@ -49,7 +49,6 @@ class UpdateUserIntegrationTest {
         url = "/api/v1/users/{id}/update";
         userJpaRepository.deleteAll();
 
-        // Criando um usuário de teste
         UserEntity user = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER,
                                          new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(user);

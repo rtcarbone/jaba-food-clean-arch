@@ -57,11 +57,9 @@ class ListRestaurantsIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
 
-        // Criando restaurantes para esse dono
         RestaurantEntity restaurant1 = new RestaurantEntity();
         restaurant1.setName("Pizza Express");
         restaurant1.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
@@ -83,7 +81,6 @@ class ListRestaurantsIntegrationTest {
 
     @Test
     void shouldListAllRestaurantsSuccessfullyThroughController() throws Exception {
-        // Realiza a requisição GET para listar os restaurantes
         mockMvc.perform(get(url)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -94,10 +91,8 @@ class ListRestaurantsIntegrationTest {
 
     @Test
     void shouldListAllRestaurantsSuccessfullyThroughUseCase() {
-        // Usa o use case diretamente
         List<Restaurant> restaurants = listRestaurantsUseCase.execute();
 
-        // Valida que os dados retornados estão corretos
         assertThat(restaurants).isNotEmpty();
         assertThat(restaurants).hasSize(2);
         assertThat(restaurants.get(0)
@@ -108,16 +103,13 @@ class ListRestaurantsIntegrationTest {
 
     @Test
     void shouldReturnEmptyListWhenNoRestaurantsExist() throws Exception {
-        // Limpa os dados do banco de dados antes do teste
         restaurantJpaRepository.deleteAll();
 
-        // Realiza a requisição GET para um banco de dados vazio
         mockMvc.perform(get(url)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
 
-        // Usa o use case diretamente
         List<Restaurant> restaurants = listRestaurantsUseCase.execute();
         assertThat(restaurants).isEmpty();
     }

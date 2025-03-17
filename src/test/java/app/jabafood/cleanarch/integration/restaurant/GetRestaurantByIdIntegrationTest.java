@@ -59,11 +59,9 @@ public class GetRestaurantByIdIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante para teste
         RestaurantEntity restaurantEntity = new RestaurantEntity();
         restaurantEntity.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         restaurantEntity.setName("Pizza Express");
@@ -78,7 +76,6 @@ public class GetRestaurantByIdIntegrationTest {
 
     @Test
     void shouldRetrieveRestaurantByIdThroughController() throws Exception {
-        // Realiza a requisição GET para o endpoint da API
         mockMvc.perform(get(url, restaurantId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -88,10 +85,8 @@ public class GetRestaurantByIdIntegrationTest {
 
     @Test
     void shouldRetrieveRestaurantByIdThroughUseCase() {
-        // Usa o use case diretamente
         Restaurant restaurant = getRestaurantByIdUseCase.execute(restaurantId);
 
-        // Valida que os dados retornados estão corretos
         assertThat(restaurant).isNotNull();
         assertThat(restaurant.getId()).isEqualTo(restaurantId);
         assertThat(restaurant.getName()).isEqualTo("Pizza Express");
@@ -101,7 +96,6 @@ public class GetRestaurantByIdIntegrationTest {
     void shouldReturnNotFoundWhenRestaurantDoesNotExist() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
 
-        // Realiza a requisição GET para um ID inexistente
         mockMvc.perform(get(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

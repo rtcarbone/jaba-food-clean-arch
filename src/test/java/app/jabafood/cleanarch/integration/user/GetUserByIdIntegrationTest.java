@@ -59,7 +59,6 @@ public class GetUserByIdIntegrationTest {
 
     @Test
     void shouldRetrieveRestaurantByIdThroughController() throws Exception {
-        // Realiza a requisição GET para o endpoint da API
         mockMvc.perform(get(url, userId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -69,10 +68,8 @@ public class GetUserByIdIntegrationTest {
 
     @Test
     void shouldRetrieveUserByIdThroughUseCase() {
-        // Usa o use case diretamente
         User user = getUserByIdUseCase.execute(userId);
 
-        // Valida que os dados retornados estão corretos
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(userId);
         assertThat(user.getName()).isEqualTo("John Doe");
@@ -82,7 +79,6 @@ public class GetUserByIdIntegrationTest {
     void shouldReturnNotFoundWhenUserDoesNotExist() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
 
-        // Realiza a requisição GET para um ID inexistente
         mockMvc.perform(get(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

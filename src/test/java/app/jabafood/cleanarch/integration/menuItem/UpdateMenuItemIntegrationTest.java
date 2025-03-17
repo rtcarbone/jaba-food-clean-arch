@@ -78,17 +78,14 @@ class UpdateMenuItemIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um usuário para associar ao Restaurant
         UserEntity owner = new UserEntity(null, "John Doe", "john.doe@example.com", "johndoe", "123456", UserType.RESTAURANT_OWNER,
                                           new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", LocalDateTime.now()));
         userJpaRepository.save(owner);
 
-        // Criando um restaurante para associar ao MenuItem
         RestaurantEntity restaurant = new RestaurantEntity(null, "Sabor Italiano",
                                                            new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", LocalDateTime.now()), CuisineType.JAPANESE, LocalTime.of(18, 0), LocalTime.of(23, 0), owner, null, LocalDateTime.now());
         restaurantJpaRepository.save(restaurant);
 
-        // Criando um MenuItem para teste
         MenuItemEntity menuItemEntity = new MenuItemEntity();
         menuItemEntity.setName("Margherita Pizza");
         menuItemEntity.setDescription("Mussarela, parmesão, tomate");
@@ -103,7 +100,6 @@ class UpdateMenuItemIntegrationTest {
 
     @Test
     void shouldUpdateMenuItemSuccessfullyThroughController() throws Exception {
-        // Criando um JSON com os novos dados
         String updatedMenuItemJson = """
                     {
                         "name": "Updated Pizza",
@@ -111,7 +107,6 @@ class UpdateMenuItemIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição PUT para atualizar o MenuItem
         mockMvc.perform(put(url, menuItemId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updatedMenuItemJson))
@@ -143,10 +138,8 @@ class UpdateMenuItemIntegrationTest {
         MenuItem updatedMenuItem = new MenuItem(
                 menuItemId, "Pizza Margharita", null, BigDecimal.valueOf(25.0), false, "/images/pizza.png", createdRestaurant);
 
-        // Usa o use case diretamente
         MenuItem result = updateMenuItemUseCase.execute(menuItemId, updatedMenuItem);
 
-        // Valida que os dados retornados estão corretos
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(menuItemId);
         assertThat(result.getName()).isEqualTo("Pizza Margharita");
@@ -164,7 +157,6 @@ class UpdateMenuItemIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição PUT para um ID inexistente
         mockMvc.perform(put(url, nonExistentId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(updatedMenuItemJson))
@@ -180,7 +172,6 @@ class UpdateMenuItemIntegrationTest {
                     }
                 """;
 
-        // Realiza a requisição PUT para um preço inválido
         mockMvc.perform(put(url, menuItemId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(invalidMenuItemJson))

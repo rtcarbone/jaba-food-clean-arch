@@ -60,12 +60,10 @@ class ListRestaurantsByOwnerIntegrationTest {
         restaurantJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
 
-        // Criando um dono de restaurante
         UserEntity owner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(owner);
         ownerId = owner.getId();
 
-        // Criando restaurantes para esse dono
         RestaurantEntity restaurant1 = new RestaurantEntity();
         restaurant1.setName("Pizza Express");
         restaurant1.setAddress(new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
@@ -87,7 +85,6 @@ class ListRestaurantsByOwnerIntegrationTest {
 
     @Test
     void shouldListRestaurantsByOwnerSuccessfullyThroughController() throws Exception {
-        // Realiza a requisição GET para listar os restaurantes por dono
         mockMvc.perform(get(url + ownerId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -98,10 +95,8 @@ class ListRestaurantsByOwnerIntegrationTest {
 
     @Test
     void shouldListRestaurantsByOwnerSuccessfullyThroughUseCase() {
-        // Usa o use case diretamente
         List<Restaurant> restaurants = listRestaurantsByOwnerUseCase.execute(ownerId);
 
-        // Valida que os dados retornados estão corretos
         assertThat(restaurants).isNotEmpty();
         assertThat(restaurants).hasSize(2);
         assertThat(restaurants.get(0)
@@ -112,18 +107,16 @@ class ListRestaurantsByOwnerIntegrationTest {
 
     @Test
     void shouldReturnEmptyListWhenOwnerHasNoRestaurants() throws Exception {
-        // Criando um novo dono sem restaurantes
         UserEntity newOwner = new UserEntity(null, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, new AddressEntity(null, "Rua Fake", "São Paulo", "SP", "00000-000", "Brazil", null));
         userJpaRepository.save(newOwner);
 
-        // Realiza a requisição GET para um dono sem restaurantes
         mockMvc.perform(get(url + newOwner.getId())
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
 
-        // Usa o use case diretamente
         List<Restaurant> restaurants = listRestaurantsByOwnerUseCase.execute(newOwner.getId());
+
         assertThat(restaurants).isEmpty();
     }
 }
