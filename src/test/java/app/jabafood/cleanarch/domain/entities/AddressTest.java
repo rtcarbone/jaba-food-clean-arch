@@ -93,9 +93,9 @@ class AddressTest {
 
         assertAll("Updated Address fields",
                   () -> assertEquals("456 Elm St", updatedAddress.getStreet()),
-                  () -> assertEquals("Springfield", updatedAddress.getCity()), // Unchanged
+                  () -> assertEquals("Springfield", updatedAddress.getCity()),
                   () -> assertEquals("CA", updatedAddress.getState()),
-                  () -> assertEquals("62704", updatedAddress.getZipCode()), // Unchanged
+                  () -> assertEquals("62704", updatedAddress.getZipCode()),
                   () -> assertEquals("Canada", updatedAddress.getCountry())
         );
     }
