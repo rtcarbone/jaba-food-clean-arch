@@ -30,7 +30,7 @@ public record MenuItemResponseDTO(
 
         @Schema(description = "Indicates if the item is available only for in-restaurant dining",
                 example = "true")
-        Boolean inRestaurant,
+        Boolean inRestaurantOnly,
 
         @Schema(description = "Path to the image of the menu item",
                 example = "/images/menu/margherita.jpg")

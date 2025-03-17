@@ -22,7 +22,7 @@ public class MenuItemEntity {
     private String name;
     private String description;
     private BigDecimal price;
-    private boolean inRestaurantOnly;
+    private Boolean inRestaurantOnly;
     private String imagePath;
 
     @ManyToOne

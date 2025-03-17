@@ -10,10 +10,12 @@ This is a backend system for a collaborative restaurant management platform deve
 - Database Migration Management with Flyway
 - API Documentation with Swagger
 - Unit and Integration Testing
+- **Designed with Clean Architecture for better scalability and maintainability**
 
 ## Technical Stack
 
 - **Backend:** Java 21, Spring Boot
+- **Architecture:** Clean Architecture
 - **Database:** PostgreSQL
 - **Containerization:** Docker, Docker Compose
 - **ORM & Migrations:** Hibernate, Flyway
@@ -38,8 +40,16 @@ This is a backend system for a collaborative restaurant management platform deve
     docker-compose up --build
     ```
 
-3. **Access the Swagger UI**
+3. **Access the Swagger UI**  
    After starting the application, you can access the Swagger UI at:
     ```
     http://localhost:8080/swagger-ui/index.html
     ```
+
+## Project Structure
+
+The project follows **Clean Architecture**, ensuring better separation of concerns and maintainability. The main layers include:
+
+- **Entities:** Business rules and core logic
+- **Use Cases:** Application-specific rules
+- **Frameworks & Drivers:** Infrastructure components like controllers and repositories
