@@ -1,18 +1,26 @@
 package app.jabafood.cleanarch.domain.entities;
 
 import app.jabafood.cleanarch.domain.exceptions.AddressMandatoryFieldException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AddressTest {
+class AddressTest {
+
+    private UUID id;
+    private Address validAddress;
+
+    @BeforeEach
+    void setup() {
+        id = UUID.randomUUID();
+        validAddress = new Address(id, "123 Main St", "Springfield", "IL", "62704", "USA");
+    }
 
     @Test
     void shouldThrowExceptionWhenStreetIsNullOrEmpty() {
-        UUID id = UUID.randomUUID();
-
         assertThrows(AddressMandatoryFieldException.class, () ->
                 new Address(id, null, "City", "State", "12345", "Country").validate()
         );
@@ -24,8 +32,6 @@ public class AddressTest {
 
     @Test
     void shouldThrowExceptionWhenCityIsNullOrEmpty() {
-        UUID id = UUID.randomUUID();
-
         assertThrows(AddressMandatoryFieldException.class, () ->
                 new Address(id, "Street", null, "State", "12345", "Country").validate()
         );
@@ -37,8 +43,6 @@ public class AddressTest {
 
     @Test
     void shouldThrowExceptionWhenStateIsNullOrEmpty() {
-        UUID id = UUID.randomUUID();
-
         assertThrows(AddressMandatoryFieldException.class, () ->
                 new Address(id, "Street", "City", null, "12345", "Country").validate()
         );
@@ -50,8 +54,6 @@ public class AddressTest {
 
     @Test
     void shouldThrowExceptionWhenZipCodeIsNullOrEmpty() {
-        UUID id = UUID.randomUUID();
-
         assertThrows(AddressMandatoryFieldException.class, () ->
                 new Address(id, "Street", "City", "State", null, "Country").validate()
         );
@@ -63,8 +65,6 @@ public class AddressTest {
 
     @Test
     void shouldThrowExceptionWhenCountryIsNullOrEmpty() {
-        UUID id = UUID.randomUUID();
-
         assertThrows(AddressMandatoryFieldException.class, () ->
                 new Address(id, "Street", "City", "State", "12345", null).validate()
         );
@@ -76,29 +76,27 @@ public class AddressTest {
 
     @Test
     void shouldCreateValidAddress() {
-        UUID id = UUID.randomUUID();
-        Address address = new Address(id, "123 Main St", "Springfield", "IL", "62704", "USA");
+        assertDoesNotThrow(validAddress::validate);
 
-        assertDoesNotThrow(address::validate);
-        assertEquals("123 Main St", address.getStreet());
-        assertEquals("Springfield", address.getCity());
-        assertEquals("IL", address.getState());
-        assertEquals("62704", address.getZipCode());
-        assertEquals("USA", address.getCountry());
+        assertAll("Address fields",
+                  () -> assertEquals("123 Main St", validAddress.getStreet()),
+                  () -> assertEquals("Springfield", validAddress.getCity()),
+                  () -> assertEquals("IL", validAddress.getState()),
+                  () -> assertEquals("62704", validAddress.getZipCode()),
+                  () -> assertEquals("USA", validAddress.getCountry())
+        );
     }
 
     @Test
     void shouldReturnNewInstanceWithUpdatedValuesUsingCopyWith() {
-        UUID id = UUID.randomUUID();
-        Address address = new Address(id, "123 Main St", "Springfield", "IL", "62704", "USA");
+        Address updatedAddress = validAddress.copyWith("456 Elm St", null, "CA", null, "Canada");
 
-        Address updatedAddress = address.copyWith("456 Elm St", null, "CA", null, "Canada");
-
-        assertEquals("456 Elm St", updatedAddress.getStreet());
-        assertEquals("Springfield", updatedAddress.getCity()); // Unchanged
-        assertEquals("CA", updatedAddress.getState());
-        assertEquals("62704", updatedAddress.getZipCode()); // Unchanged
-        assertEquals("Canada", updatedAddress.getCountry());
+        assertAll("Updated Address fields",
+                  () -> assertEquals("456 Elm St", updatedAddress.getStreet()),
+                  () -> assertEquals("Springfield", updatedAddress.getCity()), // Unchanged
+                  () -> assertEquals("CA", updatedAddress.getState()),
+                  () -> assertEquals("62704", updatedAddress.getZipCode()), // Unchanged
+                  () -> assertEquals("Canada", updatedAddress.getCountry())
+        );
     }
 }
-

@@ -4,50 +4,52 @@ import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.exceptions.UserMandatoryFieldException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
-public class UserTest {
+@ExtendWith(MockitoExtension.class)
+class UserTest {
 
-    private UUID id;
-    private String name;
-    private String email;
-    private String login;
-    private String password;
-    private UserType userType;
-    private LocalDateTime createdAt;
+    private static final UUID USER_ID = UUID.randomUUID();
+    private static final String NAME = "John Doe";
+    private static final String EMAIL = "john.doe@example.com";
+    private static final String LOGIN = "johndoe";
+    private static final String PASSWORD = "123456";
+    private static final UserType USER_TYPE = UserType.CUSTOMER;
+    private static final LocalDateTime CREATED_AT = LocalDateTime.now();
+
+    @Mock
     private Address address;
+
+    @InjectMocks
     private User user;
 
     @BeforeEach
     void setUp() {
-        id = UUID.randomUUID();
-        name = "John Doe";
-        email = "john.doe@example.com";
-        login = "johndoe";
-        password = "123456";
-        userType = UserType.CUSTOMER;
-        createdAt = LocalDateTime.now();
-        address = mock(Address.class);
-
-        user = new User(id, name, email, login, password, userType, createdAt, address);
+        user = new User(USER_ID, NAME, EMAIL, LOGIN, PASSWORD, USER_TYPE, CREATED_AT, address);
     }
-
 
     @Test
     void shouldCreateUserWithValidAttributes() {
-        assertThat(user.getId()).isEqualTo(id);
-        assertThat(user.getName()).isEqualTo(name);
-        assertThat(user.getEmail()).isEqualTo(email);
-        assertThat(user.getLogin()).isEqualTo(login);
-        assertThat(user.getPassword()).isEqualTo(password);
-        assertThat(user.getUserType()).isEqualTo(userType);
-        assertThat(user.getCreatedAt()).isEqualTo(createdAt);
-        assertThat(user.getAddress()).isNotNull();
+        assertAll("Validating user attributes",
+                  () -> assertThat(user.getId()).isEqualTo(USER_ID),
+                  () -> assertThat(user.getName()).isEqualTo(NAME),
+                  () -> assertThat(user.getEmail()).isEqualTo(EMAIL),
+                  () -> assertThat(user.getLogin()).isEqualTo(LOGIN),
+                  () -> assertThat(user.getPassword()).isEqualTo(PASSWORD),
+                  () -> assertThat(user.getUserType()).isEqualTo(USER_TYPE),
+                  () -> assertThat(user.getCreatedAt()).isEqualTo(CREATED_AT),
+                  () -> assertThat(user.getAddress()).isNotNull()
+        );
     }
 
     @Test
@@ -58,56 +60,53 @@ public class UserTest {
 
     @Test
     void shouldCreateUserWithNullEmail() {
-        User userWithoutEmail = new User(id, name, null, login, password, userType, createdAt, address);
+        User userWithoutEmail = new User(USER_ID, NAME, null, LOGIN, PASSWORD, USER_TYPE, CREATED_AT, address);
         assertThat(userWithoutEmail.getEmail()).isNull();
     }
 
     @Test
     void shouldCopyUserWithUpdatedAttributes() {
-        String newName = "Jane Doe";
-        String newEmail = "jane.doe@example.com";
-        String newLogin = "janedoe";
-        String newPassword = "654321";
-        UserType newUserType = UserType.CUSTOMER;
-        Address newAddress = mock(Address.class);
+        User copiedUser = user.copyWith("Jane Doe", "jane.doe@example.com", "janedoe", "654321", UserType.RESTAURANT_OWNER, address);
 
-        User copiedUser = user.copyWith(newName, newEmail, newLogin, newPassword, newUserType, newAddress);
-
-        assertThat(copiedUser.getId()).isEqualTo(user.getId());
-        assertThat(copiedUser.getName()).isEqualTo(newName);
-        assertThat(copiedUser.getEmail()).isEqualTo(newEmail);
-        assertThat(copiedUser.getLogin()).isEqualTo(newLogin);
-        assertThat(copiedUser.getPassword()).isEqualTo(newPassword);
-        assertThat(copiedUser.getUserType()).isEqualTo(newUserType);
-        assertThat(copiedUser.getAddress()).isEqualTo(newAddress);
+        assertAll("Validating copied user attributes",
+                  () -> assertThat(copiedUser.getId()).isEqualTo(user.getId()),
+                  () -> assertThat(copiedUser.getName()).isEqualTo("Jane Doe"),
+                  () -> assertThat(copiedUser.getEmail()).isEqualTo("jane.doe@example.com"),
+                  () -> assertThat(copiedUser.getLogin()).isEqualTo("janedoe"),
+                  () -> assertThat(copiedUser.getPassword()).isEqualTo("654321"),
+                  () -> assertThat(copiedUser.getUserType()).isEqualTo(UserType.RESTAURANT_OWNER),
+                  () -> assertThat(copiedUser.getAddress()).isEqualTo(address)
+        );
     }
 
     @Test
     void shouldCopyUserAndPreserveOriginalValuesWhenNullIsPassed() {
         User copiedUser = user.copyWith(null, null, null, null, null, null);
 
-        assertThat(copiedUser.getId()).isEqualTo(user.getId());
-        assertThat(copiedUser.getName()).isEqualTo(user.getName());
-        assertThat(copiedUser.getEmail()).isEqualTo(user.getEmail());
-        assertThat(copiedUser.getLogin()).isEqualTo(user.getLogin());
-        assertThat(copiedUser.getPassword()).isEqualTo(user.getPassword());
-        assertThat(copiedUser.getUserType()).isEqualTo(user.getUserType());
-        assertThat(copiedUser.getAddress()).isEqualTo(user.getAddress());
+        assertAll("Ensuring unchanged values",
+                  () -> assertThat(copiedUser.getId()).isEqualTo(user.getId()),
+                  () -> assertThat(copiedUser.getName()).isEqualTo(user.getName()),
+                  () -> assertThat(copiedUser.getEmail()).isEqualTo(user.getEmail()),
+                  () -> assertThat(copiedUser.getLogin()).isEqualTo(user.getLogin()),
+                  () -> assertThat(copiedUser.getPassword()).isEqualTo(user.getPassword()),
+                  () -> assertThat(copiedUser.getUserType()).isEqualTo(user.getUserType()),
+                  () -> assertThat(copiedUser.getAddress()).isEqualTo(user.getAddress())
+        );
     }
 
     @Test
     void shouldUpdateOnlyOneAttributeWhenUsingCopyWith() {
-        String newName = "Updated Name";
-        User copiedUser = user.copyWith(newName, null, null, null, null, null);
+        User copiedUser = user.copyWith("Updated Name", null, null, null, null, null);
 
-        assertThat(copiedUser.getName()).isEqualTo(newName);
-        assertThat(copiedUser.getEmail()).isEqualTo(user.getEmail());
-        assertThat(copiedUser.getLogin()).isEqualTo(user.getLogin());
-        assertThat(copiedUser.getPassword()).isEqualTo(user.getPassword());
-        assertThat(copiedUser.getUserType()).isEqualTo(user.getUserType());
-        assertThat(copiedUser.getAddress()).isEqualTo(user.getAddress());
+        assertAll("Ensuring only the name was changed",
+                  () -> assertThat(copiedUser.getName()).isEqualTo("Updated Name"),
+                  () -> assertThat(copiedUser.getEmail()).isEqualTo(user.getEmail()),
+                  () -> assertThat(copiedUser.getLogin()).isEqualTo(user.getLogin()),
+                  () -> assertThat(copiedUser.getPassword()).isEqualTo(user.getPassword()),
+                  () -> assertThat(copiedUser.getUserType()).isEqualTo(user.getUserType()),
+                  () -> assertThat(copiedUser.getAddress()).isEqualTo(user.getAddress())
+        );
     }
-
 
     @Test
     void shouldValidateSuccessfullyWhenAllFieldsArePresent() {
@@ -115,57 +114,41 @@ public class UserTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenNameIsNull() {
-        user = new User(id, null, email, login, password, userType, createdAt, address);
-        assertThatThrownBy(user::validate)
-                .isInstanceOf(UserMandatoryFieldException.class)
-                .hasMessage("The field 'name' is mandatory for user registration.");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenNameIsEmpty() {
-        user = new User(id, "  ", email, login, password, userType, createdAt, address);
-        assertThatThrownBy(user::validate)
-                .isInstanceOf(UserMandatoryFieldException.class)
-                .hasMessage("The field 'name' is mandatory for user registration.");
+    void shouldThrowExceptionWhenNameIsNullOrEmpty() {
+        assertAll("Validating name",
+                  () -> assertThatThrownBy(() -> new User(USER_ID, null, EMAIL, LOGIN, PASSWORD, USER_TYPE, CREATED_AT, address).validate())
+                          .isInstanceOf(UserMandatoryFieldException.class)
+                          .hasMessage("The field 'name' is mandatory for user registration."),
+                  () -> assertThatThrownBy(() -> new User(USER_ID, " ", EMAIL, LOGIN, PASSWORD, USER_TYPE, CREATED_AT, address).validate())
+                          .isInstanceOf(UserMandatoryFieldException.class)
+                          .hasMessage("The field 'name' is mandatory for user registration.")
+        );
     }
 
     @Test
     void shouldThrowExceptionWhenAddressIsNull() {
-        user = new User(id, name, email, login, password, userType, createdAt, null);
-        assertThatThrownBy(user::validate)
+        assertThatThrownBy(() -> new User(USER_ID, NAME, EMAIL, LOGIN, PASSWORD, USER_TYPE, CREATED_AT, null).validate())
                 .isInstanceOf(UserMandatoryFieldException.class)
                 .hasMessage("The field 'address' is mandatory for user registration.");
     }
 
     @Test
     void shouldThrowExceptionWhenLoginIsNull() {
-        user = new User(id, name, email, null, password, userType, createdAt, address);
-        assertThatThrownBy(user::validate)
+        assertThatThrownBy(() -> new User(USER_ID, NAME, EMAIL, null, PASSWORD, USER_TYPE, CREATED_AT, address).validate())
                 .isInstanceOf(UserMandatoryFieldException.class)
                 .hasMessage("The field 'login' is mandatory for user registration.");
     }
 
     @Test
-    void shouldThrowExceptionWhenEmailIsNull() {
-        user = new User(id, name, null, login, password, userType, createdAt, address);
-        assertThatThrownBy(user::validate)
-                .isInstanceOf(UserMandatoryFieldException.class)
-                .hasMessage("The field 'email' is mandatory for user registration.");
-    }
-
-    @Test
     void shouldThrowExceptionWhenPasswordIsNull() {
-        user = new User(id, name, email, login, null, userType, createdAt, address);
-        assertThatThrownBy(user::validate)
+        assertThatThrownBy(() -> new User(USER_ID, NAME, EMAIL, LOGIN, null, USER_TYPE, CREATED_AT, address).validate())
                 .isInstanceOf(UserMandatoryFieldException.class)
                 .hasMessage("The field 'password' is mandatory for user registration.");
     }
 
     @Test
     void shouldThrowExceptionWhenUserTypeIsNull() {
-        user = new User(id, name, email, login, password, null, createdAt, address);
-        assertThatThrownBy(user::validate)
+        assertThatThrownBy(() -> new User(USER_ID, NAME, EMAIL, LOGIN, PASSWORD, null, CREATED_AT, address).validate())
                 .isInstanceOf(UserMandatoryFieldException.class)
                 .hasMessage("The field 'userType' is mandatory for user registration.");
     }

@@ -11,6 +11,10 @@ import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
 import java.util.Optional;
@@ -21,74 +25,82 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CreateRestaurantUseCaseTest {
 
-    private CreateRestaurantUseCase createRestaurantUseCase;
+    private static final UUID OWNER_ID = UUID.randomUUID();
+    private static final UUID RESTAURANT_ID = UUID.randomUUID();
+    private static final String RESTAURANT_NAME = "Pizza Express";
+    private static final CuisineType CUISINE_TYPE = CuisineType.PIZZERIA;
+    private static final LocalTime OPENING_TIME = LocalTime.of(10, 0);
+    private static final LocalTime CLOSING_TIME = LocalTime.of(23, 0);
+
+    @Mock
     private IRestaurantGateway restaurantGateway;
+
+    @Mock
     private IUserGateway userGateway;
+
+    @Mock
+    private Address address;
+
+    @InjectMocks
+    private CreateRestaurantUseCase createRestaurantUseCase;
+
+    private User validOwner;
+    private Restaurant restaurant;
 
     @BeforeEach
     void setup() {
-        restaurantGateway = mock(IRestaurantGateway.class);
-        userGateway = mock(IUserGateway.class);
-        createRestaurantUseCase = new CreateRestaurantUseCase(restaurantGateway, userGateway);
+        validOwner = new User(OWNER_ID, "John Doe", "john@example.com", "johndoe", "password", UserType.RESTAURANT_OWNER, null, null);
+        restaurant = new Restaurant(RESTAURANT_ID, RESTAURANT_NAME, address, CUISINE_TYPE, OPENING_TIME, CLOSING_TIME, validOwner);
     }
 
     @Test
     void shouldCreateRestaurantSuccessfully() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-
-        UUID restaurantId = UUID.randomUUID();
-        Restaurant restaurant = new Restaurant(
-                restaurantId, "Pizza Express", mock(Address.class), CuisineType.PIZZERIA,
-                LocalTime.of(10, 0), LocalTime.of(23, 0), owner
-        );
-
-        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
+        // Arrange
+        when(userGateway.findById(OWNER_ID)).thenReturn(Optional.of(validOwner));
         when(restaurantGateway.save(any(Restaurant.class))).thenReturn(restaurant);
 
-        // When
+        // Act
         Restaurant createdRestaurant = createRestaurantUseCase.execute(restaurant);
 
-        // Then
+        // Assert
         assertThat(createdRestaurant).isNotNull();
-        assertThat(createdRestaurant.getName()).isEqualTo("Pizza Express");
-        assertThat(createdRestaurant.getCuisineType()).isEqualTo(CuisineType.PIZZERIA);
-        assertThat(createdRestaurant.getOwner()).isEqualTo(owner);
+        assertThat(createdRestaurant.getName()).isEqualTo(RESTAURANT_NAME);
+        assertThat(createdRestaurant.getCuisineType()).isEqualTo(CUISINE_TYPE);
+        assertThat(createdRestaurant.getOwner()).isEqualTo(validOwner);
 
+        verify(userGateway, times(1)).findById(OWNER_ID);
         verify(restaurantGateway, times(1)).save(any(Restaurant.class));
     }
 
     @Test
     void shouldFailIfOwnerDoesNotExist() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
+        // Arrange
+        when(userGateway.findById(OWNER_ID)).thenReturn(Optional.empty());
 
-        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Sushi Place", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(12, 0), LocalTime.of(22, 0), owner);
-
-        when(userGateway.findById(ownerId)).thenReturn(Optional.empty());
-
-        // When / Then
+        // Act & Assert
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> createRestaurantUseCase.execute(restaurant));
-        assertThat(exception.getMessage()).isEqualTo("User with ID '" + ownerId + "' not found.");
+
+        assertThat(exception.getMessage()).isEqualTo("User with ID '" + OWNER_ID + "' not found.");
+
+        verify(userGateway, times(1)).findById(OWNER_ID);
+        verify(restaurantGateway, never()).save(any(Restaurant.class));
     }
 
     @Test
     void shouldFailIfOwnerIsNotRestaurantOwner() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "Jane Doe", "janedoe", "jane@example.com", "password", UserType.CUSTOMER, null, null);
+        // Arrange
+        User invalidOwner = new User(OWNER_ID, "Jane Doe", "jane@example.com", "janedoe", "password", UserType.CUSTOMER, null, null);
+        when(userGateway.findById(OWNER_ID)).thenReturn(Optional.of(invalidOwner));
 
-        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Burger House", mock(Address.class), CuisineType.BURGER, LocalTime.of(11, 0), LocalTime.of(23, 0), owner);
-
-        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
-
-        // When / Then
+        // Act & Assert
         RestaurantOwnerInvalidException exception = assertThrows(RestaurantOwnerInvalidException.class, () -> createRestaurantUseCase.execute(restaurant));
-        assertThat(exception.getMessage()).isEqualTo("User with ID '" + ownerId + "' is not a valid owner for this restaurant.");
-    }
 
+        assertThat(exception.getMessage()).isEqualTo("User with ID '" + OWNER_ID + "' is not a valid owner for this restaurant.");
+
+        verify(userGateway, times(1)).findById(OWNER_ID);
+        verify(restaurantGateway, never()).save(any(Restaurant.class));
+    }
 }

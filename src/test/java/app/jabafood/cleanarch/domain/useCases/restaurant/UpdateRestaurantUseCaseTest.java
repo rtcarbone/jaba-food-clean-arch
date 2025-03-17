@@ -8,9 +8,12 @@ import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.exceptions.InvalidClosingTimeException;
 import app.jabafood.cleanarch.domain.exceptions.RestaurantNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
-import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
 import java.util.Optional;
@@ -21,85 +24,89 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UpdateRestaurantUseCaseTest {
 
-    private UpdateRestaurantUseCase updateRestaurantUseCase;
+    private static final UUID RESTAURANT_ID = UUID.randomUUID();
+    private static final String OLD_NAME = "Old Name";
+    private static final String NEW_NAME = "New Name";
+    private static final CuisineType OLD_CUISINE = CuisineType.PIZZERIA;
+    private static final CuisineType NEW_CUISINE = CuisineType.ITALIAN;
+    private static final LocalTime OLD_OPENING_TIME = LocalTime.of(10, 0);
+    private static final LocalTime OLD_CLOSING_TIME = LocalTime.of(22, 0);
+    private static final LocalTime NEW_OPENING_TIME = LocalTime.of(9, 0);
+    private static final LocalTime NEW_CLOSING_TIME = LocalTime.of(23, 0);
+    private static final LocalTime INVALID_CLOSING_TIME = LocalTime.of(7, 0);
+
+    @Mock
     private IRestaurantGateway restaurantGateway;
-    private IUserGateway userGateway;
+
+    @Mock
+    private Address address;
+
+    @InjectMocks
+    private UpdateRestaurantUseCase updateRestaurantUseCase;
+
+    private User owner;
+    private Restaurant existingRestaurant;
+    private Restaurant updatedData;
 
     @BeforeEach
     void setup() {
-        restaurantGateway = mock(IRestaurantGateway.class);
-        userGateway = mock(IUserGateway.class);
-        updateRestaurantUseCase = new UpdateRestaurantUseCase(restaurantGateway);
+        owner = new User(UUID.randomUUID(), "John Doe", "john@example.com", "johndoe", "password", UserType.RESTAURANT_OWNER, null, null);
+        existingRestaurant = new Restaurant(RESTAURANT_ID, OLD_NAME, address, OLD_CUISINE, OLD_OPENING_TIME, OLD_CLOSING_TIME, owner);
+        updatedData = new Restaurant(RESTAURANT_ID, NEW_NAME, address, NEW_CUISINE, NEW_OPENING_TIME, NEW_CLOSING_TIME, owner);
     }
 
     @Test
     void shouldUpdateRestaurantSuccessfully() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
-
-        UUID restaurantId = UUID.randomUUID();
-        Restaurant existingRestaurant = new Restaurant(
-                restaurantId, "Old Name", mock(Address.class), CuisineType.PIZZERIA,
-                LocalTime.of(10, 0), LocalTime.of(22, 0), owner
-        );
-
-        Restaurant updatedData = new Restaurant(
-                restaurantId, "New Name", mock(Address.class), CuisineType.ITALIAN,
-                LocalTime.of(9, 0), LocalTime.of(23, 0), owner
-        );
-
-        when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
-        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
+        // Arrange
+        when(restaurantGateway.findById(RESTAURANT_ID)).thenReturn(Optional.of(existingRestaurant));
         when(restaurantGateway.save(any(Restaurant.class))).thenReturn(updatedData);
 
-        // When
-        Restaurant updatedRestaurant = updateRestaurantUseCase.execute(restaurantId, updatedData);
+        // Act
+        Restaurant updatedRestaurant = updateRestaurantUseCase.execute(RESTAURANT_ID, updatedData);
 
-        // Then
+        // Assert
         assertThat(updatedRestaurant).isNotNull();
-        assertThat(updatedRestaurant.getName()).isEqualTo("New Name");
-        assertThat(updatedRestaurant.getCuisineType()).isEqualTo(CuisineType.ITALIAN);
-        assertThat(updatedRestaurant.getOpeningTime()).isEqualTo(LocalTime.of(9, 0));
-        assertThat(updatedRestaurant.getClosingTime()).isEqualTo(LocalTime.of(23, 0));
+        assertThat(updatedRestaurant.getName()).isEqualTo(NEW_NAME);
+        assertThat(updatedRestaurant.getCuisineType()).isEqualTo(NEW_CUISINE);
+        assertThat(updatedRestaurant.getOpeningTime()).isEqualTo(NEW_OPENING_TIME);
+        assertThat(updatedRestaurant.getClosingTime()).isEqualTo(NEW_CLOSING_TIME);
 
+        verify(restaurantGateway, times(1)).findById(RESTAURANT_ID);
         verify(restaurantGateway, times(1)).save(any(Restaurant.class));
     }
 
     @Test
     void shouldFailIfRestaurantDoesNotExist() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
-        UUID restaurantId = UUID.randomUUID();
-        Restaurant updatedData = new Restaurant(
-                restaurantId, "Updated Name", mock(Address.class), CuisineType.BURGER,
-                LocalTime.of(9, 0), LocalTime.of(23, 0), owner
-        );
+        // Arrange
+        when(restaurantGateway.findById(RESTAURANT_ID)).thenReturn(Optional.empty());
 
-        when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.empty());
+        // Act & Assert
+        RestaurantNotFoundException exception = assertThrows(RestaurantNotFoundException.class,
+                                                             () -> updateRestaurantUseCase.execute(RESTAURANT_ID, updatedData));
 
-        // When / Then
-        RestaurantNotFoundException exception = assertThrows(RestaurantNotFoundException.class, () -> updateRestaurantUseCase.execute(restaurantId, updatedData));
-        assertThat(exception.getMessage()).isEqualTo("Restaurant with ID '" + restaurantId + "' not found.");
+        assertThat(exception.getMessage()).isEqualTo("Restaurant with ID '" + RESTAURANT_ID + "' not found.");
+
+        verify(restaurantGateway, times(1)).findById(RESTAURANT_ID);
+        verify(restaurantGateway, never()).save(any(Restaurant.class));
     }
 
     @Test
     void shouldFailIfClosingTimeIsBeforeOpeningTime() {
-        // Given
-        UUID ownerId = UUID.randomUUID();
-        UUID restaurantId = UUID.randomUUID();
-        User owner = new User(ownerId, "John Doe", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, mock(Address.class));
-        Restaurant existingRestaurant = new Restaurant(restaurantId, "Old Name", mock(Address.class), CuisineType.PIZZERIA, LocalTime.of(10, 0), LocalTime.of(22, 0), owner);
-        Restaurant updatedData = new Restaurant(restaurantId, "Updated Name", mock(Address.class), CuisineType.PIZZERIA, LocalTime.of(18, 0), LocalTime.of(17, 0), owner);
+        // Arrange
+        Restaurant invalidUpdatedData = new Restaurant(RESTAURANT_ID, NEW_NAME, address, OLD_CUISINE, NEW_OPENING_TIME, INVALID_CLOSING_TIME, owner);
 
-        when(restaurantGateway.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
-        when(userGateway.findById(ownerId)).thenReturn(Optional.of(owner));
+        when(restaurantGateway.findById(RESTAURANT_ID)).thenReturn(Optional.of(existingRestaurant));
 
-        // When / Then
-        InvalidClosingTimeException exception = assertThrows(InvalidClosingTimeException.class, () -> updateRestaurantUseCase.execute(restaurantId, updatedData));
+        // Act & Assert
+        InvalidClosingTimeException exception = assertThrows(InvalidClosingTimeException.class,
+                                                             () -> updateRestaurantUseCase.execute(RESTAURANT_ID, invalidUpdatedData));
+
         assertThat(exception.getMessage()).isEqualTo("Closing time must be later than opening time.");
+
+        verify(restaurantGateway, times(1)).findById(RESTAURANT_ID);
+        verify(restaurantGateway, never()).save(any(Restaurant.class));
     }
 }

@@ -1,13 +1,15 @@
 package app.jabafood.cleanarch.domain.useCases.menuItem;
 
-import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.MenuItem;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
-import app.jabafood.cleanarch.domain.enums.CuisineType;
 import app.jabafood.cleanarch.domain.exceptions.MenuItemNotFoundException;
 import app.jabafood.cleanarch.domain.gateways.IMenuItemGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -17,48 +19,58 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class GetMenuItemByIdUseCaseTest {
 
-    private GetMenuItemByIdUseCase getMenuItemByIdUseCase;
+    private static final UUID MENU_ITEM_ID = UUID.randomUUID();
+    private static final String MENU_ITEM_NAME = "Pizza Margherita";
+    private static final String MENU_ITEM_DESC = "Tomato, mozzarella, and basil";
+    private static final BigDecimal MENU_ITEM_PRICE = BigDecimal.valueOf(29.99);
+    private static final String MENU_ITEM_IMAGE = "/images/burger.png";
+    private static final boolean MENU_ITEM_VEGAN = false;
+
+    @Mock
     private IMenuItemGateway menuItemGateway;
+
+    @Mock
+    private Restaurant restaurant;
+
+    @InjectMocks
+    private GetMenuItemByIdUseCase getMenuItemByIdUseCase;
+
+    private MenuItem menuItem;
 
     @BeforeEach
     void setup() {
-        menuItemGateway = mock(IMenuItemGateway.class);
-        getMenuItemByIdUseCase = new GetMenuItemByIdUseCase(menuItemGateway);
+        menuItem = new MenuItem(MENU_ITEM_ID, MENU_ITEM_NAME, MENU_ITEM_DESC, MENU_ITEM_PRICE, MENU_ITEM_VEGAN, MENU_ITEM_IMAGE, restaurant);
     }
 
     @Test
     void shouldReturnMenuItemIfExists() {
-        // Given
-        Restaurant restaurant = new Restaurant(UUID.randomUUID(), "Pizza Express", mock(Address.class), CuisineType.JAPANESE, null, null, null);
-        UUID id = UUID.randomUUID();
-        MenuItem menuItem = new MenuItem(id, "Pizza Margherita", "Tomato, mozzarella, and basil", new BigDecimal("29.99"), false, "/images/burger.png", restaurant);
+        // Arrange
+        when(menuItemGateway.findById(MENU_ITEM_ID)).thenReturn(Optional.of(menuItem));
 
-        when(menuItemGateway.findById(id)).thenReturn(Optional.of(menuItem));
+        // Act
+        MenuItem result = getMenuItemByIdUseCase.execute(MENU_ITEM_ID);
 
-        // When
-        MenuItem result = getMenuItemByIdUseCase.execute(id);
-
-        // Then
+        // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(id);
-        assertThat(result.getName()).isEqualTo("Pizza Margherita");
+        assertThat(result.getId()).isEqualTo(MENU_ITEM_ID);
+        assertThat(result.getName()).isEqualTo(MENU_ITEM_NAME);
 
-        verify(menuItemGateway, times(1)).findById(id);
+        verify(menuItemGateway, times(1)).findById(MENU_ITEM_ID);
     }
 
     @Test
     void shouldThrowExceptionIfMenuItemNotFound() {
-        // Given
-        UUID id = UUID.randomUUID();
-        when(menuItemGateway.findById(id)).thenReturn(Optional.empty());
+        // Arrange
+        when(menuItemGateway.findById(MENU_ITEM_ID)).thenReturn(Optional.empty());
 
-        // When / Then
+        // Act & Assert
         assertThatExceptionOfType(MenuItemNotFoundException.class)
-                .isThrownBy(() -> getMenuItemByIdUseCase.execute(id))
-                .withMessage("Menu with ID '" + id + "' not found.");
+                .isThrownBy(() -> getMenuItemByIdUseCase.execute(MENU_ITEM_ID))
+                .withMessage("Menu with ID '" + MENU_ITEM_ID + "' not found.");
 
-        verify(menuItemGateway, times(1)).findById(id);
+        verify(menuItemGateway, times(1)).findById(MENU_ITEM_ID);
     }
 }

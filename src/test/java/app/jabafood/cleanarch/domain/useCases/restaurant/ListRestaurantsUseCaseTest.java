@@ -4,10 +4,13 @@ import app.jabafood.cleanarch.domain.entities.Address;
 import app.jabafood.cleanarch.domain.entities.Restaurant;
 import app.jabafood.cleanarch.domain.entities.User;
 import app.jabafood.cleanarch.domain.enums.CuisineType;
-import app.jabafood.cleanarch.domain.enums.UserType;
 import app.jabafood.cleanarch.domain.gateways.IRestaurantGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
 import java.util.Collections;
@@ -18,37 +21,51 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ListRestaurantsUseCaseTest {
 
-    private ListRestaurantsUseCase listRestaurantsUseCase;
+    private static final UUID RESTAURANT_1_ID = UUID.randomUUID();
+    private static final UUID RESTAURANT_2_ID = UUID.randomUUID();
+    private static final String RESTAURANT_1_NAME = "Pizza Express";
+    private static final String RESTAURANT_2_NAME = "Burger King";
+    private static final CuisineType CUISINE_TYPE = CuisineType.JAPANESE;
+    private static final LocalTime OPENING_TIME = LocalTime.of(11, 0);
+    private static final LocalTime CLOSING_TIME = LocalTime.of(23, 0);
+
+    @Mock
     private IRestaurantGateway restaurantGateway;
+
+    @Mock
+    private Address address;
+
+    @Mock
+    private User owner1;
+
+    @Mock
+    private User owner2;
+
+    @InjectMocks
+    private ListRestaurantsUseCase listRestaurantsUseCase;
+
+    private Restaurant restaurant1;
+    private Restaurant restaurant2;
 
     @BeforeEach
     void setup() {
-        restaurantGateway = mock(IRestaurantGateway.class);
-        listRestaurantsUseCase = new ListRestaurantsUseCase(restaurantGateway);
+        restaurant1 = new Restaurant(RESTAURANT_1_ID, RESTAURANT_1_NAME, address, CUISINE_TYPE, OPENING_TIME, CLOSING_TIME, owner1);
+        restaurant2 = new Restaurant(RESTAURANT_2_ID, RESTAURANT_2_NAME, address, CUISINE_TYPE, OPENING_TIME, CLOSING_TIME, owner2);
     }
 
     @Test
     void shouldReturnAllRestaurants() {
-        // Given
-        UUID restaurant1Id = UUID.randomUUID();
-        UUID restaurant2Id = UUID.randomUUID();
-
-        User owner1 = new User(UUID.randomUUID(), "John Doe 1", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-        User owner2 = new User(UUID.randomUUID(), "John Doe 2", "johndoe", "john@example.com", "password", UserType.RESTAURANT_OWNER, null, null);
-
-        Restaurant restaurant1 = new Restaurant(restaurant1Id, "Pizza Express", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(11, 0), LocalTime.of(23, 0), owner1);
-        Restaurant restaurant2 = new Restaurant(restaurant2Id, "Burger King", mock(Address.class), CuisineType.JAPANESE, LocalTime.of(11, 0), LocalTime.of(23, 0), owner2);
-
+        // Arrange
         List<Restaurant> restaurants = List.of(restaurant1, restaurant2);
-
         when(restaurantGateway.findAll()).thenReturn(restaurants);
 
-        // When
+        // Act
         List<Restaurant> result = listRestaurantsUseCase.execute();
 
-        // Then
+        // Assert
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(2);
         assertThat(result).containsExactlyInAnyOrder(restaurant1, restaurant2);
@@ -58,13 +75,13 @@ class ListRestaurantsUseCaseTest {
 
     @Test
     void shouldReturnEmptyListIfNoRestaurantsExist() {
-        // Given
+        // Arrange
         when(restaurantGateway.findAll()).thenReturn(Collections.emptyList());
 
-        // When
+        // Act
         List<Restaurant> result = listRestaurantsUseCase.execute();
 
-        // Then
+        // Assert
         assertThat(result).isEmpty();
 
         verify(restaurantGateway, times(1)).findAll();
@@ -72,15 +89,14 @@ class ListRestaurantsUseCaseTest {
 
     @Test
     void shouldHandleErrorsWhenFetchingRestaurants() {
-        // Given
+        // Arrange
         when(restaurantGateway.findAll()).thenThrow(new RuntimeException("Database error"));
 
-        // When / Then
+        // Act & Assert
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> listRestaurantsUseCase.execute())
                 .withMessage("Database error");
 
         verify(restaurantGateway, times(1)).findAll();
     }
-
 }

@@ -9,9 +9,10 @@ import app.jabafood.cleanarch.domain.gateways.IUserGateway;
 import app.jabafood.cleanarch.domain.valueObjects.UserPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -20,74 +21,77 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class UpdateUserPasswordUseCaseTest {
+@ExtendWith(MockitoExtension.class)
+class UpdateUserPasswordUseCaseTest {
+
+    private static final UUID USER_ID = UUID.randomUUID();
+    private static final String OLD_PASSWORD = "oldPassword";
+    private static final String NEW_PASSWORD = "newPassword";
+    private static final String WRONG_OLD_PASSWORD = "wrongOldPassword";
 
     @Mock
     private IUserGateway userGateway;
 
+    @Mock
+    private Address address;
+
     @InjectMocks
     private UpdateUserPasswordUseCase updateUserPasswordUseCase;
 
-    private UUID userId;
     private User existingUser;
     private UserPassword userPassword;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
-        userId = UUID.randomUUID();
-        existingUser = new User(userId, "John Doe", "john.doe@example.com", "johndoe", "oldPassword", UserType.CUSTOMER, null, mock(Address.class));
-
-        userPassword = new UserPassword("oldPassword", "newPassword", "newPassword");
+        existingUser = new User(USER_ID, "John Doe", "john.doe@example.com", "johndoe", OLD_PASSWORD, UserType.CUSTOMER, null, address);
+        userPassword = new UserPassword(OLD_PASSWORD, NEW_PASSWORD, NEW_PASSWORD);
     }
 
     @Test
-    void shouldUpdateUserPasswordSuccess() {
-        try {
-            User updatedData = new User(userId, "John Doe", "john.doe@example.com", "johndoe", "newPassword", UserType.CUSTOMER, null, mock(Address.class));
+    void shouldUpdateUserPasswordSuccessfully() {
+        // Arrange
+        User updatedUser = new User(USER_ID, "John Doe", "john.doe@example.com", "johndoe", NEW_PASSWORD, UserType.CUSTOMER, null, address);
 
-            // Mock do metodo findById
-            when(userGateway.findById(userId)).thenReturn(Optional.of(existingUser));
-            when(userGateway.save(any(User.class))).thenReturn(updatedData);
+        when(userGateway.findById(USER_ID)).thenReturn(Optional.of(existingUser));
+        when(userGateway.save(any(User.class))).thenReturn(updatedUser);
 
-            // Executando a atualização da senha
-            User updatedUser = updateUserPasswordUseCase.execute(userId, userPassword);
+        // Act
+        User result = updateUserPasswordUseCase.execute(USER_ID, userPassword);
 
-            // Verificando se a senha foi atualizada
-            assertNotNull(updatedUser);  // Verifique se o updatedUser não é nulo
-            assertEquals("newPassword", updatedUser.getPassword());
-        } catch (Exception e) {
-            fail("An exception was thrown: " + e.getMessage());
-        }
+        // Assert
+        assertNotNull(result);
+        assertEquals(NEW_PASSWORD, result.getPassword());
+
+        verify(userGateway, times(1)).findById(USER_ID);
+        verify(userGateway, times(1)).save(any(User.class));
     }
 
     @Test
     void shouldThrowInvalidPasswordExceptionWhenOldPasswordIsIncorrect() {
-        // Configuração do comportamento do mock para retornar o usuário
-        when(userGateway.findById(userId)).thenReturn(Optional.of(existingUser));
+        // Arrange
+        when(userGateway.findById(USER_ID)).thenReturn(Optional.of(existingUser));
 
-        // Alterando a senha antiga no objeto userPassword para algo incorreto
-        UserPassword invalidPassword = new UserPassword("wrongOldPassword", "newPassword", "newPassword");
+        UserPassword invalidPassword = new UserPassword(WRONG_OLD_PASSWORD, NEW_PASSWORD, NEW_PASSWORD);
 
-        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
-            updateUserPasswordUseCase.execute(userId, invalidPassword);
-        });
+        // Act & Assert
+        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () ->
+                updateUserPasswordUseCase.execute(USER_ID, invalidPassword));
 
         assertEquals("The old password is invalid", exception.getMessage());
 
-        verify(userGateway, times(1)).findById(userId);
-        verify(userGateway, times(0)).save(any(User.class));
+        verify(userGateway, times(1)).findById(USER_ID);
+        verify(userGateway, never()).save(any(User.class));
     }
 
     @Test
     void shouldThrowUserNotFoundExceptionWhenUserDoesNotExist() {
-        when(userGateway.findById(userId)).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> {
-            updateUserPasswordUseCase.execute(userId, userPassword);
-        });
+        // Arrange
+        when(userGateway.findById(USER_ID)).thenReturn(Optional.empty());
 
-        verify(userGateway, times(1)).findById(userId);
-        verify(userGateway, times(0)).save(any(User.class));
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> updateUserPasswordUseCase.execute(USER_ID, userPassword));
+
+        verify(userGateway, times(1)).findById(USER_ID);
+        verify(userGateway, never()).save(any(User.class));
     }
 }
