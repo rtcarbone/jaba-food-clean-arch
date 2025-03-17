@@ -4,7 +4,7 @@ networks:
 
 services:
 
-  ### 🟢 Banco de Dados para a Aplicação
+  ### Banco de Dados para a Aplicação
   postgres:
     image: postgres:16
     container_name: jaba_db
@@ -25,7 +25,7 @@ services:
     networks:
       - jaba_network
 
-  ### 🟢 Banco de Dados para Testes
+  ### Banco de Dados para Testes
   postgres_test:
     image: postgres:16
     container_name: jaba_db_test
@@ -46,7 +46,7 @@ services:
     networks:
       - jaba_network
 
-  ### 🟢 Serviço para rodar os testes
+  ### Serviço para rodar os testes
   run-tests:
     build:
       context: .
@@ -64,13 +64,12 @@ services:
       SPRING_FLYWAY_ENABLED: true
     volumes:
       - maven_cache:/root/.m2
-      - ./jacoco-reports:/app/jacoco
     entrypoint: [ "sh", "-c", "mvn clean verify" ]
     networks:
       - jaba_network
     restart: "no"
 
-  ### 🟢 Backend Principal
+  ### Backend Principal
   jaba-food-backend-app:
     build:
       context: .
@@ -97,7 +96,7 @@ services:
     networks:
       - jaba_network
 
-  ### 🟢 PGAdmin para Gerenciamento
+  ### PGAdmin para Gerenciamento
   pgadmin:
     image: dpage/pgadmin4
     container_name: jaba_pgadmin
